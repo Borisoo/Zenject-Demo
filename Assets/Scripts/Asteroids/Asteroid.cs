@@ -8,7 +8,7 @@ using ModestTree;
 namespace Asteroids
 {
 
-public sealed class Asteroid : SpaceObjectBehaviour , IPoolable<IMemoryPool>
+public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterface> , IPoolable<IMemoryPool>
 {
     private LevelHelper _level;
   
@@ -73,17 +73,17 @@ public sealed class Asteroid : SpaceObjectBehaviour , IPoolable<IMemoryPool>
     
     public class Factory : PlaceholderFactory<Asteroid> {  }
 
-    public void Kill()
+    public override void Kill(BulletType type, IProjectileInterface projectile)
     {
-        SpawnExplosion();
-
-        UpdateScore();
-
-        BreakIntoFragments();
-        
-        this.gameObject.SetActive(false);
+        if(BulletType.FromPlayer == type)
+        {
+            SpawnExplosion();
+            UpdateScore();
+            BreakIntoFragments();
+            projectile.DestroyProjectile();
+            this.gameObject.SetActive(false);
+        }
     }
-
 
     private void UpdateScore()
     {

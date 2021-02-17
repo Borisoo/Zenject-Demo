@@ -7,7 +7,7 @@ using System;
 
 namespace Asteroids
 {
-public sealed class Bullet : MonoBehaviour, IPoolable<BulletType,IMemoryPool>
+public sealed class Bullet : MonoBehaviour, IPoolable<BulletType,IMemoryPool>, IProjectileInterface
 {
 
     private float _startTime;
@@ -52,30 +52,17 @@ public sealed class Bullet : MonoBehaviour, IPoolable<BulletType,IMemoryPool>
 
     void OnTriggerEnter(Collider other)
     {
-        if(_type == BulletType.FromEnemy)
+        if(other.gameObject.TryGetComponent(out SpaceObjectBehaviour<BulletType,IProjectileInterface> ship))
         {
-            if(other.gameObject.TryGetComponent(out ShipBehaviour ship))
-            {
-                ship.Kill();
-                this.gameObject.SetActive(false);
-            }
-        }
-
-        if(_type == BulletType.FromPlayer)
-        {
-            if(other.gameObject.TryGetComponent(out Asteroid asteroid))
-            {
-                asteroid.Kill();
-                this.gameObject.SetActive(false);
-            }
-
-            if(other.gameObject.TryGetComponent(out UFO ufo))
-            {
-                ufo.Kill();
-                this.gameObject.SetActive(false);
-            }
+            ship.Kill(_type,this);
         }
     }
+
+    public void DestroyProjectile()
+    {
+        gameObject.SetActive(false);
+    }
+
 
     public void OnDespawned()
     {

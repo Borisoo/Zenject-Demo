@@ -11,9 +11,9 @@ public sealed class ProjectileLauncher : MonoBehaviour , IInputProxy
    [SerializeField] private Transform Nozzle;  
    private IInputInterface _InputInterface; 
    private Asteroids.Bullet.Factory _bulletFactory;
-   private float speed;
-   private float timer;
-   private float fireRate;
+   private float _speed;
+   private float _timer;
+   private float _fireRate;
    private int pooledObjectIndex; 
    public IInputInterface InputDependency{get => _InputInterface;  set => _InputInterface = value; }
    
@@ -31,8 +31,8 @@ public sealed class ProjectileLauncher : MonoBehaviour , IInputProxy
 
    private void Initialize()
    {
-       speed = projectileData.speed;
-       fireRate = projectileData.fireRate;
+       _speed = projectileData.speed;
+       _fireRate = projectileData.fireRate;
    }
 
    void Update()
@@ -45,10 +45,10 @@ public sealed class ProjectileLauncher : MonoBehaviour , IInputProxy
 
    private void Shoot()
    {
-       timer += Time.deltaTime;
-       if(timer > fireRate)
+       _timer += Time.deltaTime;
+       if(_timer > _fireRate)
        {
-           timer = 0;
+           _timer = 0;
            SpawnBullet();
        }
    }
@@ -62,7 +62,7 @@ public sealed class ProjectileLauncher : MonoBehaviour , IInputProxy
            projectile.transform.position = Nozzle.position;
            projectile.transform.rotation = Nozzle.rotation;
            projectile.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-           projectile.GetComponent<Rigidbody>().velocity = speed * Time.deltaTime * Nozzle.up;
+           projectile.GetComponent<Rigidbody>().velocity = _speed * Time.deltaTime * Nozzle.up;
        }
    }
 }

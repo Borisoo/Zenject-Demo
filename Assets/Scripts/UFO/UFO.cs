@@ -8,12 +8,11 @@ using System;
 namespace Asteroids
 {
 
-public sealed class UFO : SpaceObjectBehaviour, IPoolable<IMemoryPool>, INPCInterface
+public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>, IPoolable<IMemoryPool>
 {
     IMemoryPool _pool;
     private int score;
     private UFOData uFOData;
-    public UFOData SetUFOData{ set => uFOData = value;}
     public int Score{ set => score = value; }
     private float _startTime;
     IScoreHandler _scoreHandler;
@@ -33,15 +32,15 @@ public sealed class UFO : SpaceObjectBehaviour, IPoolable<IMemoryPool>, INPCInte
 
     [Inject]
     [HideInInspector]
-    public UFOSettings ufoSettings;
+    public readonly UFOSettings ufoSettings;
     private Rigidbody _rigidBody;
     public override Vector3 Position { get =>  transform.position; set => transform.position = value; }
 
     //npc states
-    public UFOAttackState attackState = new UFOAttackState();
-    public UFORoamState roamState = new UFORoamState();
-    public UFOIdleState idleState = new UFOIdleState();
-    public INPCState currentState;
+    public readonly UFOAttackState attackState = new UFOAttackState();
+    public readonly UFORoamState roamState = new UFORoamState();
+    public readonly UFOIdleState idleState = new UFOIdleState();
+    private  INPCState currentState;
     public string currentStateName;
 
     public Vector3 RightDir()
@@ -66,12 +65,15 @@ public sealed class UFO : SpaceObjectBehaviour, IPoolable<IMemoryPool>, INPCInte
         currentStateName = "" + currentState;
     }
 
-    public void Kill()
+    public override void Kill(BulletType type,IProjectileInterface projectile)
     {
-        SpawnExplosion();
-        UpdateScore();
-        
-        this.gameObject.SetActive(false);
+        if(BulletType.FromPlayer == type)
+        {
+            SpawnExplosion();
+            UpdateScore();
+            projectile.DestroyProjectile();
+            this.gameObject.SetActive(false);
+        }
     }
 
     public void OnSpawned(IMemoryPool pool)
