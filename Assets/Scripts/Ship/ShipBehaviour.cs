@@ -5,10 +5,9 @@ using Zenject;
 
 namespace Asteroids
 {
-public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType,IProjectileInterface>, IInputProxy, IShipInterface
+public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType,IProjectileInterface>, IShipInterface
 {
     private IInputInterface _inputInterface;
-    public IInputInterface InputDependency{ get => _inputInterface; set => _inputInterface = value; }
     private IGameController _gameController;
     
     [Inject]

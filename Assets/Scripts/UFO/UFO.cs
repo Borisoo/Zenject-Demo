@@ -17,6 +17,7 @@ public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>,
     private float _startTime;
     IScoreHandler _scoreHandler;
     public  Bullet.Factory _bulletFactory;
+    
     [Inject]
     public void Construct(IScoreHandler  scoreHandler, Bullet.Factory bulletFactory)
     {

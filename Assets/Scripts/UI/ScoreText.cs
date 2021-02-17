@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Asteroids
 {
-public class ScoreText: MonoBehaviour 
+public sealed class ScoreText: MonoBehaviour 
 {   
     Text scoreText;
     IScoreHandler scoreHandlerInterface;

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class UINavigationController : INavigationControllerInterface
+public sealed class UINavigationController : INavigationControllerInterface
 {
  
     public  bool popUpEnabled;
