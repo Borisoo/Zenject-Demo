@@ -7,7 +7,7 @@ using ModestTree;
 
 namespace Asteroids
 {
-public class UFOSpawner : ITickable, ISpawnerInterface<UFOType>
+public sealed class UFOSpawner : ITickable, ISpawnerInterface<UFOType>
 {
     private UFO.Factory _UFOFactory;
     private LevelHelper _level;

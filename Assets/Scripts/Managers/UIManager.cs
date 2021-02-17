@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Asteroids
 {
-    public class UIManager : MonoBehaviour, IUIManagerInterface
+    public sealed class UIManager : MonoBehaviour, IUIManagerInterface
     {
         [Inject]
         INavigationControllerInterface NavigationController;

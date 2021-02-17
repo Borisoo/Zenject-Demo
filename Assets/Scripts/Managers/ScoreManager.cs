@@ -15,7 +15,6 @@ public sealed class ScoreManager : IScoreHandler
     public void UpdateScore(int score)
     { 
         this.score += score;
-
         updateScoreAction?.Invoke();
     }
 }

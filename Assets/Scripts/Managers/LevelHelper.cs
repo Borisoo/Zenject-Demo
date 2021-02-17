@@ -5,7 +5,7 @@ using Zenject;
 
 namespace Asteroids
 {
-public class LevelHelper
+public sealed class LevelHelper
 {
         readonly Camera _camera;
 

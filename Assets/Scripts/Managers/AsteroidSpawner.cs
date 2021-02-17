@@ -7,7 +7,7 @@ using System;
 
 namespace Asteroids
 {
-public class AsteroidSpawner : ITickable, ISpawnerInterface<AsteroidType>
+public sealed class AsteroidSpawner : ITickable, ISpawnerInterface<AsteroidType>
 {
     private LevelHelper _level;
  
