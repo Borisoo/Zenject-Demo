@@ -33,22 +33,24 @@ public class UFOAttackState : INPCState
             Fire(lookDir);
         }
 
-        if(Vector3.Distance(npc.transform.position , npc.PlayerShip.ShipPosition) > npc.ufoSettings.attackRange)
-        {
-            return npc.roamState;
-        }
-        
-        return npc.attackState;
-    }
-
-    private void Strafe()
-    {
         _strafeTimer += Time.deltaTime;
         if (_strafeTimer > ufo.ufoSettings.strafeInterval)
         {
             _strafeTimer = 0;
             _strafeRight = !_strafeRight;
+
+             if(Vector3.Distance(npc.transform.position , npc.PlayerShip.ShipPosition) > npc.ufoSettings.attackRange)
+            {
+                return npc.roamState;
+            }
         }
+
+        return npc.attackState;
+    }
+
+    private void Strafe()
+    {
+       
 
         if (_strafeRight)
         {
