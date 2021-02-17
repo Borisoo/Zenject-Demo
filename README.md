@@ -1,5 +1,5 @@
 # Asteroids-Game
-Asteroid Project made with using Zenject Framwork for Dependency Injection!
+Asteroid Project made with using Zenject Framwork for Dependency Injection
 
 Controls -
 
