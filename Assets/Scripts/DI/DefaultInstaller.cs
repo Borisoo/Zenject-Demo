@@ -40,7 +40,7 @@ public class DefaultInstaller : MonoInstaller<DefaultInstaller>
         .UnderTransformGroup("Asteroids"));
 
         Container.BindFactory<BulletType,Bullet,Bullet.Factory>().
-        FromPoolableMemoryPool<BulletType,Bullet,BulletPool>(poolBinder => poolBinder.WithInitialSize(20)
+        FromPoolableMemoryPool<BulletType,Bullet,BulletPool>(poolBinder => poolBinder.WithInitialSize(40)
         .FromComponentInNewPrefab(bullet)
         .UnderTransformGroup("Bullets"));
 
