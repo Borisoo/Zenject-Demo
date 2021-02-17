@@ -1,6 +1,13 @@
 # Asteroids-Game
 Asteroid Project made with using Zenject Framwork for Dependency Injection
 
+
+
+Unity Version 2020.1.4f1
+
+
+
+
 Controls -
 
 Move up - Press W Move Down - Press S Rotate Right - Press D Rotate Left - Press A
