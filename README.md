@@ -18,7 +18,6 @@ Red Spheres are UFO/ Flying Saucer who can shoot at player
 
 
 
-
 Using a component based architecture to write a decoupled and modular code. Using S.O.L.I.D principles and OOP. 
 Using Zenject Dependency Injection Framework to inject dependencies during runtime. 
 All the Data is managed with  scriptable objects which are injected during runtime to expose all the parameters like settings for designers.
