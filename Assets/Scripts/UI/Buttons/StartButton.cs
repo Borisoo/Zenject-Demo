@@ -6,16 +6,15 @@ using Zenject;
 
 namespace Asteroids
 {
-public class StartButton : MonoBehaviour
-{
-    private Button startButton;
-
-    [Inject]private  IGameController gameController;
-
-    void Start()
+    public class StartButton : MonoBehaviour
     {
-        startButton = GetComponent<Button>();
-        startButton.onClick.AddListener(()=> gameController.StartGame());
+        private Button startButton;
+        [Inject]private  IGameController gameController;
+
+        void Start()
+        {
+            startButton = GetComponent<Button>();
+            startButton.onClick.AddListener(()=> gameController.StartGame());
+        }
     }
-}
 }

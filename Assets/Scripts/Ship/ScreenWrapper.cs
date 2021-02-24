@@ -7,15 +7,12 @@ public class ScreenWrapper : MonoBehaviour
     [SerializeField]
     [HideInInspector]
     public UnityEvent beforeWrap;
-
     private Renderer objectRenderer;
     private Bounds objectBounds;
-
     private bool allowedToWrapHorizontally = true;
     private bool allowedToWrapVertically = true;
     private bool debug = true;
     private float wrapTimeout = 0.5f;
-
     private static Rect worldRect;
     private static int screenWidth;
     private static int screenHeight;
@@ -40,7 +37,7 @@ public class ScreenWrapper : MonoBehaviour
         ScreenWrap();
     }
 
-   private  void ScreenWrap()
+   private void ScreenWrap()
     {
         objectBounds = objectRenderer.bounds;
 
