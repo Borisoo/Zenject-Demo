@@ -9,8 +9,8 @@ namespace Asteroids
 public sealed class ScoreManager : IScoreHandler
 {   
     private int score;
-    public int GetScore{ get=> score; }
     private UnityAction updateScoreAction;
+    public int GetScore{ get=> score; }
     public  UnityAction UpdateScoreAction { get => updateScoreAction; set => updateScoreAction = value; }
     public void UpdateScore(int score)
     { 

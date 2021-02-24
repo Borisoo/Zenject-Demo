@@ -8,27 +8,26 @@ public class ScreenWrapper : MonoBehaviour
     [HideInInspector]
     public UnityEvent beforeWrap;
 
-    Renderer objectRenderer;
-    Bounds objectBounds;
+    private Renderer objectRenderer;
+    private Bounds objectBounds;
 
-    bool allowedToWrapHorizontally = true;
-    bool allowedToWrapVertically = true;
-    bool debug = true;
+    private bool allowedToWrapHorizontally = true;
+    private bool allowedToWrapVertically = true;
+    private bool debug = true;
+    private float wrapTimeout = 0.5f;
 
-    float wrapTimeout = 0.5f;
+    private static Rect worldRect;
+    private static int screenWidth;
+    private static int screenHeight;
 
-    static Rect worldRect;
-    static int screenWidth;
-    static int screenHeight;
-
-    void OnEnable()
+    private  void OnEnable()
     {
         objectRenderer = GetComponent<Renderer>();
         allowedToWrapHorizontally = true;
         allowedToWrapVertically = true;
     }
 
-    void Update()
+    private void Update()
     {
         if (ScreenSizeChanged())
         {
@@ -41,7 +40,7 @@ public class ScreenWrapper : MonoBehaviour
         ScreenWrap();
     }
 
-    void ScreenWrap()
+   private  void ScreenWrap()
     {
         objectBounds = objectRenderer.bounds;
 
@@ -79,7 +78,7 @@ public class ScreenWrapper : MonoBehaviour
         }
     }
 
-    static void ComputeWorldRectSize()
+    internal static void ComputeWorldRectSize()
     {
         var viewMin = Vector2.zero;
         var viewMax = Vector2.one;
@@ -92,16 +91,16 @@ public class ScreenWrapper : MonoBehaviour
     static bool ScreenSizeChanged() { return (screenWidth != Screen.width || screenHeight != Screen.height); }
     static void SaveCurrentScreenSize() { screenWidth = Screen.width; screenHeight = Screen.height; }
 
-    float WrapRightToLeft() { return worldRect.xMin - objectBounds.extents.x; }
-    float WrapLeftToRight() { return worldRect.xMax + objectBounds.extents.x; }
-    float WrapTopToBottom() { return worldRect.yMin - objectBounds.extents.y; }
-    float WrapBottomToTop() { return worldRect.yMax + objectBounds.extents.y; }
+    private  float WrapRightToLeft() { return worldRect.xMin - objectBounds.extents.x; }
+    private float WrapLeftToRight() { return worldRect.xMax + objectBounds.extents.x; }
+    private float WrapTopToBottom() { return worldRect.yMin - objectBounds.extents.y; }
+    private float WrapBottomToTop() { return worldRect.yMax + objectBounds.extents.y; }
 
-    void ReAllowHorizontalWrap() { allowedToWrapHorizontally = true; }
-    void ReAllowVerticalWrap() { allowedToWrapVertically = true; }
+    private void ReAllowHorizontalWrap() { allowedToWrapHorizontally = true; }
+    private void ReAllowVerticalWrap() { allowedToWrapVertically = true; }
 
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
-    void DrawObjectBoundsInSceneView()
+    private void DrawObjectBoundsInSceneView()
     {
         Vector3 lowerLeft = new Vector3(objectBounds.min.x, objectBounds.min.y, 0);
         Vector3 upperLeft = new Vector3(objectBounds.min.x, objectBounds.max.y, 0);

@@ -7,7 +7,7 @@ namespace Asteroids
 {
 public sealed class LevelHelper
 {
-        readonly Camera _camera;
+        private readonly Camera _camera;
 
         public LevelHelper(
             [Inject(Id = "Main")]

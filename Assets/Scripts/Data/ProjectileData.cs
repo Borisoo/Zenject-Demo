@@ -7,7 +7,6 @@ using UnityEngine;
 public class ProjectileData : ScriptableObject
 {
     public float speed;
-
     public float fireRate;
 }
 

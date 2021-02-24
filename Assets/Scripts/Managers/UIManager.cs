@@ -7,14 +7,13 @@ namespace Asteroids
 {
     public sealed class UIManager : MonoBehaviour, IUIManagerInterface
     {
-        [Inject]
-        INavigationControllerInterface NavigationController;
+        [Inject] private INavigationControllerInterface NavigationController;
 
-        [SerializeField] GameObject HomeScreen;
-        [SerializeField] GameObject GameScreen;
-        [SerializeField] GameObject EndScreen;
+        [SerializeField] private GameObject HomeScreen;
+        [SerializeField] private GameObject GameScreen;
+        [SerializeField] private GameObject EndScreen;
 
-        void Start()
+        private  void Start()
         {
            NavigationController.Push(HomeScreen,true,true);
         }
