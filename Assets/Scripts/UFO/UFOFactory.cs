@@ -19,7 +19,6 @@ public class UFODataFactory : IUFOFactoryInterface<UFOType,UFOData>
         var ufoTypes = Assembly.GetAssembly(typeof(UFOBase)).GetTypes()
             .Where(attribute => attribute.IsClass && !attribute.IsAbstract && attribute.IsSubclassOf(typeof(UFOBase)));
 
-        //initialize a dictionary 
         UFOByTag = new Dictionary<UFOType, Type>();
 
         foreach(var type in ufoTypes)

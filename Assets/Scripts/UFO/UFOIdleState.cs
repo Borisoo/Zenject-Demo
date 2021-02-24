@@ -10,7 +10,6 @@ public class UFOIdleState : INPCState
     {
         set => ufo = value;
     }
-
     public INPCState DoState( UFO npc)
     {   
         return npc.idleState;

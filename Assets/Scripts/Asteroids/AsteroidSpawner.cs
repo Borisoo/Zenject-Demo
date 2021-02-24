@@ -10,28 +10,21 @@ namespace Asteroids
 public sealed class AsteroidSpawner : ITickable, ISpawnerInterface<AsteroidType>
 {
     private LevelHelper _level;
- 
-    IAsteroidFactoryInterface<AsteroidType,AsteroidData>  asteroidDataFactoryInterface;
+    private IAsteroidFactoryInterface<AsteroidType,AsteroidData>  _asteroidDataFactoryInteface;
 
-    [Inject]
-    public void Construct(IAsteroidFactoryInterface<AsteroidType,AsteroidData> asteroidDataFactoryInterface,
-    LevelHelper levelHelper)
+    [Inject] 
+    public void Construct(IAsteroidFactoryInterface<AsteroidType,AsteroidData> asteroidDataFactoryInterface, LevelHelper levelHelper)
     {
-        this.asteroidDataFactoryInterface = asteroidDataFactoryInterface;
+        this._asteroidDataFactoryInteface = asteroidDataFactoryInterface;
         this._level = levelHelper;
     }
 
-    [Inject]
-    private Asteroid.Factory asteroidFactory;
-
-    [Inject]
-    private UFO.Factory ufoFactory;
-
-    [Inject]
-    private AsteroidSpawnerSettings settings;
+    [Inject]private Asteroid.Factory asteroidFactory;
+    [Inject]private UFO.Factory ufoFactory;
+    [Inject]private AsteroidSpawnerSettings settings;
 
     private float _timer;
-    bool canSpawn;
+    private bool canSpawn;
  
     public void Tick()
     {
@@ -57,7 +50,7 @@ public sealed class AsteroidSpawner : ITickable, ISpawnerInterface<AsteroidType>
     private void SpawnAsteroid()
     {
         var random_AsteroidType = RandomEnum<AsteroidType>.Get(); 
-        var data = asteroidDataFactoryInterface.GetData(random_AsteroidType);
+        var data = _asteroidDataFactoryInteface.GetData(random_AsteroidType);
 
         if(data == null || random_AsteroidType == AsteroidType.none)
         {
@@ -70,18 +63,14 @@ public sealed class AsteroidSpawner : ITickable, ISpawnerInterface<AsteroidType>
         asteroid.transform.position = GetRandomStartPosition(asteroid.ScaleFactor); 
     }
 
-    /// <summary>
-    /// spawn asteroid at given point
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="position"></param>    
+   
     public void SpawnAtPosition(AsteroidType type, Vector3 position)
     {
         Asteroid asteroid = asteroidFactory.Create(); 
 
         asteroid.transform.position = position;
 
-        var data = asteroidDataFactoryInterface.GetData(type);
+        var data = _asteroidDataFactoryInteface.GetData(type);
         InitializeAsteroid(ref asteroid,data,type);
     }
 

@@ -10,13 +10,13 @@ namespace Asteroids
 
 public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>, IPoolable<IMemoryPool>
 {
-    IMemoryPool _pool;
+    private IMemoryPool _pool;
     private int score;
     private UFOData uFOData;
-    public int Score{ set => score = value; }
     private float _startTime;
-    IScoreHandler _scoreHandler;
-    public  Bullet.Factory _bulletFactory;
+    private  INPCState currentState;
+    private IScoreHandler _scoreHandler;
+    
     
     [Inject]
     public void Construct(IScoreHandler  scoreHandler, Bullet.Factory bulletFactory)
@@ -25,11 +25,9 @@ public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>,
        _bulletFactory = bulletFactory;
     }
 
-    [Inject]
-    private UFOSpawnerSettings _settings;
-    [Inject]
-    private IShipInterface _playerShip;
-    public IShipInterface PlayerShip { get => _playerShip; }
+    [Inject]private UFOSpawnerSettings _settings;
+    [Inject] private IShipInterface _playerShip;
+   
 
     [Inject]
     [HideInInspector]
@@ -41,15 +39,17 @@ public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>,
     public readonly UFOAttackState attackState = new UFOAttackState();
     public readonly UFORoamState roamState = new UFORoamState();
     public readonly UFOIdleState idleState = new UFOIdleState();
-    private  INPCState currentState;
+   
     public string currentStateName;
-
+    public  Bullet.Factory _bulletFactory;
+    public int Score{ set => score = value; }
+    public IShipInterface PlayerShip { get => _playerShip; }
     public Vector3 RightDir()
     {
         return transform.right;
     }
 
-    void Start()
+    private void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
 
@@ -60,7 +60,7 @@ public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>,
         currentState = roamState;
     }
 
-    void Update()
+    private void Update()
     {
         currentState = currentState.DoState(this);
         currentStateName = "" + currentState;

@@ -90,11 +90,6 @@ public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterf
         _scoreHandler.UpdateScore(score);
     }
 
-    public override void SpawnExplosion()
-    {
-       base.SpawnExplosion();
-    }
-
     private void BreakIntoFragments()
     {
         if(!CanBreak())
@@ -128,7 +123,7 @@ public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterf
         _pool = null;
     }
 
-    void CheckForTeleport()
+    private void CheckForTeleport()
     {
         if (Position.x > _level.Right + ScaleFactor && IsMovingInDirection(Vector3.right))
         {
@@ -150,7 +145,7 @@ public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterf
         transform.RotateAround(transform.position, Vector3.up, 30 * Time.deltaTime);
     }
 
-    bool IsMovingInDirection(Vector3 dir)
+    internal bool IsMovingInDirection(Vector3 dir)
     {
         return Vector3.Dot(dir, _rigidBody.velocity) > 0;
     }
