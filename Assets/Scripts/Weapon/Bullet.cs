@@ -9,29 +9,21 @@ namespace Asteroids
 {
 public sealed class Bullet : MonoBehaviour, IPoolable<BulletType,IMemoryPool>, IProjectileInterface
 {
-
     private float _startTime;
-    IMemoryPool _pool;
-
-    BulletType _type;
-    public BulletType Type
-    {
-        get { return _type; }
-    }
-
-    [SerializeField]
-    Material _playerMaterial = null;
-
-    [SerializeField]
-    Material _enemyMaterial = null;
-
+    private IMemoryPool _pool;
+    private  BulletType _type;
+    
+    [SerializeField]private  Material _playerMaterial = null;
+    [SerializeField]private Material _enemyMaterial = null;
 
     [Inject]
-    BulletSettings _settings;
-
+    private BulletSettings _settings;
     private MeshRenderer _renderer;
    
-    void Update()
+    public BulletType Type {  get { return _type; } }
+
+
+    private void Update()
     {
         if (Time.realtimeSinceStartup - _startTime > _settings.LifeTime)
         {
@@ -50,7 +42,7 @@ public sealed class Bullet : MonoBehaviour, IPoolable<BulletType,IMemoryPool>, I
         _startTime = Time.realtimeSinceStartup;
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.TryGetComponent(out SpaceObjectBehaviour<BulletType,IProjectileInterface> ship))
         {
@@ -69,11 +61,12 @@ public sealed class Bullet : MonoBehaviour, IPoolable<BulletType,IMemoryPool>, I
         _pool = null;
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         if(_pool!=null)
         _pool.Despawn(this);
     }
+
     public class Factory : PlaceholderFactory<BulletType,Bullet> {  }
 }
 }

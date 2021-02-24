@@ -9,12 +9,17 @@ public sealed class ProjectileLauncher : MonoBehaviour , IInputProxy
 {
    [SerializeField] private ProjectileData projectileData;
    [SerializeField] private Transform Nozzle;  
+
+
    private IInputInterface _InputInterface; 
    private Asteroids.Bullet.Factory _bulletFactory;
+   
    private float _speed;
    private float _timer;
    private float _fireRate;
    private int pooledObjectIndex; 
+
+
    public IInputInterface InputDependency{get => _InputInterface;  set => _InputInterface = value; }
    
     [Inject]

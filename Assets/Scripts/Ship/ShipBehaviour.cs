@@ -9,6 +9,7 @@ public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType,IProjectileI
 {
     private IInputInterface _inputInterface;
     private IGameController _gameController;
+    private bool isDead;
     
     [Inject]
     public void Setup(IInputInterface inputInterface, IGameController gameController)
@@ -21,7 +22,7 @@ public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType,IProjectileI
     public Vector3 ShipPosition{ get => this.transform.position; }
     public override Vector3 Position{ get => this.transform.position; }
     public bool IsDead => isDead;
-    private bool isDead;
+
 
     void OnTriggerEnter(Collider other)
     {

@@ -8,10 +8,8 @@ namespace Asteroids
 {
 public class ReloadButton : MonoBehaviour
 {
-    Button reloadButton;
-
-    [Inject]
-    IGameController gameController;
+    private  Button reloadButton;
+    [Inject]private IGameController gameController;
 
     void Start()
     {

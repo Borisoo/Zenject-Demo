@@ -4,10 +4,9 @@ using UnityEngine;
 
 namespace Asteroids
 {
-
-public interface IRequireDependency<T>
+public interface IBoundsDataProxy
 {
-   T DependencyInterface{get;set;}
+      BoundsData boundsData{ get; set; }
 }
 
 }

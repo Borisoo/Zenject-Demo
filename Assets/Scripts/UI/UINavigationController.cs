@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+namespace Asteroids
+{
 
 public sealed class UINavigationController : INavigationControllerInterface
 {
- 
     public  bool popUpEnabled;
-    public delegate void NavigationEventCompleted();
     private Stack<GameObject> navigationStack = new Stack<GameObject>();
 
     public void Push(GameObject popup, bool newFlow = true, bool shouldActivateImmediately = true)
@@ -60,5 +60,4 @@ public sealed class UINavigationController : INavigationControllerInterface
         }
     }
 }
-
-
+}

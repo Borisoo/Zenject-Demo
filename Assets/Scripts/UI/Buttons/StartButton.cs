@@ -8,10 +8,9 @@ namespace Asteroids
 {
 public class StartButton : MonoBehaviour
 {
-    Button startButton;
+    private Button startButton;
 
-    [Inject]
-    IGameController gameController;
+    [Inject]private  IGameController gameController;
 
     void Start()
     {

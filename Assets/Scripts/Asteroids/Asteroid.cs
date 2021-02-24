@@ -11,20 +11,20 @@ namespace Asteroids
 public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterface> , IPoolable<IMemoryPool>
 {
     private LevelHelper _level;
-  
-    [Inject]
-    private AsteroidSpawnerSettings _settings;
-
+    [Inject] private AsteroidSpawnerSettings _settings;
     private float _startTime;
     private int numberOfFragments;
-    public int NumberOfFragments{ set => numberOfFragments = value; }
     private int score;
+    private Vector3 scale;
+    private AsteroidType asteroidType;
     public int Score{ set => score = value; }
     private AsteroidType fragmentType;
     public AsteroidType FragmentType{ set => fragmentType = value; }
-    private Vector3 scale;
     public Vector3 Scale { set => scale = value; }
-    private AsteroidType asteroidType;
+    public int NumberOfFragments{ set => numberOfFragments = value; }
+
+
+
     IMemoryPool _pool;
 
     public AsteroidType AsteroidType

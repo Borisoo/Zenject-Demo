@@ -17,9 +17,10 @@ public class AsteroidDataFactory : IAsteroidFactoryInterface<AsteroidType,Astero
         return;
 
         var sizes = Assembly.GetAssembly(typeof(AsteroidBase)).GetTypes()
-            .Where(attribute => attribute.IsClass && !attribute.IsAbstract && attribute.IsSubclassOf(typeof(AsteroidBase)));
+            .Where(attribute => attribute.IsClass 
+            && !attribute.IsAbstract 
+            && attribute.IsSubclassOf(typeof(AsteroidBase)));
 
-        //initialize a dictionary 
         AsteroidsByTag = new Dictionary<AsteroidType, Type>();
 
         foreach(var type in sizes)
@@ -54,4 +55,5 @@ public interface IAsteroidFactoryInterface<T,K>
 {
     K GetData(T t);
 }
+
 }

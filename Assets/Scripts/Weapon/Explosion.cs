@@ -7,12 +7,12 @@ namespace  Asteroids
 {
     public class Explosion : MonoBehaviour, IPoolable<IMemoryPool>
     {
-        [SerializeField]
-        float _lifeTime;
-        [SerializeField]
-        ParticleSystem _particleSystem;
-        float _startTime;
-        IMemoryPool _pool;
+        [SerializeField]private  float _lifeTime;
+        [SerializeField]private  ParticleSystem _particleSystem;
+
+        private  float _startTime;
+        private IMemoryPool _pool;
+
         public void Update()
         {
             if (Time.realtimeSinceStartup - _startTime > _lifeTime)
@@ -21,10 +21,7 @@ namespace  Asteroids
             }
         }
 
-        public void OnDespawned()
-        {
-            
-        }
+        public void OnDespawned(){}
 
         public void OnSpawned(IMemoryPool pool)
         {
