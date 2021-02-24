@@ -17,21 +17,23 @@ public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterf
     private int score;
     private Vector3 scale;
     private AsteroidType asteroidType;
-    public int Score{ set => score = value; }
+    private IMemoryPool _pool;
+
+
     private AsteroidType fragmentType;
-    public AsteroidType FragmentType{ set => fragmentType = value; }
+    private  ISpawnerInterface<AsteroidType> _spawnerInterface;
+    private IScoreHandler _scoreHandler;
+    private Vector3 screenCenter;
+    private Rigidbody _rigidBody;
+
+
+    public int Score{ set => score = value; }
     public Vector3 Scale { set => scale = value; }
     public int NumberOfFragments{ set => numberOfFragments = value; }
-
-
-
-    IMemoryPool _pool;
-
-    public AsteroidType AsteroidType
-    {
-        set => asteroidType = value;
-    }
+    public AsteroidType FragmentType{ set => fragmentType = value; }
+    public AsteroidType AsteroidType{ set => asteroidType = value; }
    
+
     [Inject]
     public void Construct( LevelHelper levelHelper,ISpawnerInterface<AsteroidType>  spawner,IScoreHandler  scoreHandler)
     {
@@ -39,28 +41,24 @@ public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterf
         _spawnerInterface = spawner;
         _scoreHandler = scoreHandler;
     }
-    ISpawnerInterface<AsteroidType> _spawnerInterface;
-
-    IScoreHandler _scoreHandler;
 
     public override Vector3 Position { get =>  transform.position; set => transform.position = value; }
-    private Vector3 screenCenter;
-    private Rigidbody _rigidBody;
 
-    void Start()
+
+    private void Start()
     {
         _rigidBody = GetComponent<Rigidbody>();
         Vector3 dir = Vector3.zero - transform.position;
         _rigidBody.AddForce(GetRandomDirection() * 100f);
     }
 
-    Vector3 GetRandomDirection()
+    private Vector3 GetRandomDirection()
     {
         var theta = UnityEngine.Random.Range(0, Mathf.PI * 2.0f);
         return new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0);
     }
 
-    void Update()
+    private void Update()
     {
         if (Time.realtimeSinceStartup - _startTime > _settings.lifeTime)
         {

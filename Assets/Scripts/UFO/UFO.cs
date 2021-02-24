@@ -25,12 +25,11 @@ public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>,
        _bulletFactory = bulletFactory;
     }
 
-    [Inject]private UFOSpawnerSettings _settings;
+    [Inject] private UFOSpawnerSettings _settings;
     [Inject] private IShipInterface _playerShip;
    
 
-    [Inject]
-    [HideInInspector]
+    [Inject] [HideInInspector]
     public readonly UFOSettings ufoSettings;
     private Rigidbody _rigidBody;
     public override Vector3 Position { get =>  transform.position; set => transform.position = value; }
