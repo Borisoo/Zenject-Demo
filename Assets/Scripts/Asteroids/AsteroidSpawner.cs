@@ -84,7 +84,7 @@ public sealed class AsteroidSpawner : ITickable, ISpawnerInterface<AsteroidType>
         asteroid.FragmentType = data.fragmentType;
     }
 
-    Vector3 GetRandomStartPosition(float scale)
+   private  Vector3 GetRandomStartPosition(float scale)
     {
         var area = RandomEnum<AreaType>.Get();
         var rand = UnityEngine.Random.Range(0.0f, 1.0f);
