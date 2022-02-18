@@ -3,77 +3,77 @@ using Zenject;
 
 namespace Asteroids
 {
-public class UFOAttackState : INPCState
-{
-    private UFO ufo;
-    private float timer;
-    private float _strafeTimer;
-    private bool _strafeRight;
-
-    public UFO SetNPC 
+    public class UFOAttackState : INPCState
     {
-        set => ufo = value;
-    }
+        private UFO ufo;
+        private float timer;
+        private float _strafeTimer;
+        private bool _strafeRight;
 
-    public INPCState DoState( UFO npc)
-    {
-        if(npc.PlayerShip.IsDead){ return npc.idleState; }
-
-        var lookDir = (npc.PlayerShip.ShipPosition - npc.transform.position).normalized;
-        Quaternion targetRotation = Quaternion.LookRotation(lookDir, Vector3.forward);
-
-        npc.transform.rotation = targetRotation;
-
-        Strafe();
-
-        timer += Time.deltaTime;
-        if(timer > npc.ufoSettings.attackInterval)
+        public UFO SetNPC
         {
-            timer = 0;
-            Fire(lookDir);
+            set => ufo = value;
         }
 
-        _strafeTimer += Time.deltaTime;
-        if (_strafeTimer > ufo.ufoSettings.strafeInterval)
+        public INPCState DoState(UFO npc)
         {
-            _strafeTimer = 0;
-            _strafeRight = !_strafeRight;
+            if (npc.PlayerShip.IsDead) { return npc.idleState; }
 
-             if(Vector3.Distance(npc.transform.position , npc.PlayerShip.ShipPosition) > npc.ufoSettings.attackRange)
+            var lookDir = (npc.PlayerShip.ShipPosition - npc.transform.position).normalized;
+            Quaternion targetRotation = Quaternion.LookRotation(lookDir, Vector3.forward);
+
+            npc.transform.rotation = targetRotation;
+
+            Strafe();
+
+            timer += Time.deltaTime;
+            if (timer > npc.ufoSettings.attackInterval)
             {
-                return npc.roamState;
+                timer = 0;
+                Fire(lookDir);
+            }
+
+            _strafeTimer += Time.deltaTime;
+            if (_strafeTimer > ufo.ufoSettings.strafeInterval)
+            {
+                _strafeTimer = 0;
+                _strafeRight = !_strafeRight;
+
+                if (Vector3.Distance(npc.transform.position, npc.PlayerShip.ShipPosition) > npc.ufoSettings.attackRange)
+                {
+                    return npc.roamState;
+                }
+            }
+
+            return npc.attackState;
+        }
+
+        private void Strafe()
+        {
+
+
+            if (_strafeRight)
+            {
+                ufo.transform.position += ufo.RightDir() * Time.deltaTime * ufo.ufoSettings.strafeSpeed;
+            }
+            else
+            {
+                ufo.transform.position += -ufo.RightDir() * Time.deltaTime * ufo.ufoSettings.strafeSpeed;
             }
         }
 
-        return npc.attackState;
-    }
-
-    private void Strafe()
-    {
-       
-
-        if (_strafeRight)
+        private void Fire(Vector3 dir)
         {
-           ufo.transform.position += ufo.RightDir() * Time.deltaTime  * ufo.ufoSettings.strafeSpeed;
-        }
-        else
-        {
-            ufo.transform.position += -ufo.RightDir() * Time.deltaTime  * ufo.ufoSettings.strafeSpeed;
+            Bullet projectile = ufo._bulletFactory.Create(BulletType.FromEnemy);
+
+            if (projectile != null)
+            {
+                projectile.transform.position = ufo.transform.position;
+                projectile.transform.rotation = ufo.transform.rotation;
+
+                projectile.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                projectile.GetComponent<Rigidbody>().AddForce(ufo.ufoSettings.attackSpeed * dir);
+            }
         }
     }
-
-    private void Fire(Vector3 dir)
-    {
-       Bullet projectile = ufo._bulletFactory.Create(BulletType.FromEnemy);
-
-       if(projectile!=null)
-       {    
-           projectile.transform.position = ufo.transform.position;
-           projectile.transform.rotation = ufo.transform.rotation;
-
-           projectile.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-           projectile.GetComponent<Rigidbody>().AddForce( ufo.ufoSettings.attackSpeed * dir) ;
-       }
-    }   
-}
 }

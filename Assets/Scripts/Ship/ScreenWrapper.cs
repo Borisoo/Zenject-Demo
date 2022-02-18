@@ -17,7 +17,7 @@ public class ScreenWrapper : MonoBehaviour
     private static int screenWidth;
     private static int screenHeight;
 
-    private  void OnEnable()
+    private void OnEnable()
     {
         objectRenderer = GetComponent<Renderer>();
         allowedToWrapHorizontally = true;
@@ -31,23 +31,22 @@ public class ScreenWrapper : MonoBehaviour
             ComputeWorldRectSize();
             SaveCurrentScreenSize();
         }
-
         if (debug) DrawObjectBoundsInSceneView();
 
         ScreenWrap();
     }
 
-   private void ScreenWrap()
+    private void ScreenWrap()
     {
         objectBounds = objectRenderer.bounds;
 
-        bool isOutOfBoundsRight  = objectBounds.min.x > worldRect.xMax;
-        bool isOutOfBoundsLeft   = objectBounds.max.x < worldRect.xMin;
-        bool isOutOfBoundsTop    = objectBounds.min.y > worldRect.yMax;
+        bool isOutOfBoundsRight = objectBounds.min.x > worldRect.xMax;
+        bool isOutOfBoundsLeft = objectBounds.max.x < worldRect.xMin;
+        bool isOutOfBoundsTop = objectBounds.min.y > worldRect.yMax;
         bool isOutOfBoundsBottom = objectBounds.max.y < worldRect.yMin;
 
         bool needToWrapHorizontally = isOutOfBoundsRight || isOutOfBoundsLeft;
-        bool needToWrapVertically   = isOutOfBoundsTop || isOutOfBoundsBottom;
+        bool needToWrapVertically = isOutOfBoundsTop || isOutOfBoundsBottom;
 
         Vector3 newPosition = transform.position;
 
@@ -57,7 +56,6 @@ public class ScreenWrapper : MonoBehaviour
             allowedToWrapHorizontally = false;
             Invoke("ReAllowHorizontalWrap", wrapTimeout);
         }
-
 
         if (needToWrapVertically && allowedToWrapVertically)
         {
@@ -87,12 +85,10 @@ public class ScreenWrapper : MonoBehaviour
     static Vector2 GetWorldPointFromViewport(Vector3 viewportPoint) { return Camera.main.ViewportToWorldPoint(viewportPoint); }
     static bool ScreenSizeChanged() { return (screenWidth != Screen.width || screenHeight != Screen.height); }
     static void SaveCurrentScreenSize() { screenWidth = Screen.width; screenHeight = Screen.height; }
-
-    private  float WrapRightToLeft() { return worldRect.xMin - objectBounds.extents.x; }
+    private float WrapRightToLeft() { return worldRect.xMin - objectBounds.extents.x; }
     private float WrapLeftToRight() { return worldRect.xMax + objectBounds.extents.x; }
     private float WrapTopToBottom() { return worldRect.yMin - objectBounds.extents.y; }
     private float WrapBottomToTop() { return worldRect.yMax + objectBounds.extents.y; }
-
     private void ReAllowHorizontalWrap() { allowedToWrapHorizontally = true; }
     private void ReAllowVerticalWrap() { allowedToWrapVertically = true; }
 

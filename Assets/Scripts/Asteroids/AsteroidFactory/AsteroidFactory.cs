@@ -1,57 +1,55 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 using System;
 using System.Reflection;
 
 namespace Asteroids
 {
-    public class AsteroidDataFactory : IAsteroidFactoryInterface<AsteroidType,AsteroidData>
+    public class AsteroidDataFactory : IAsteroidFactoryInterface<AsteroidType, AsteroidData>
     {
-        private static  Dictionary<AsteroidType,Type> AsteroidsByTag;
-        private static bool IsInitialized => AsteroidsByTag != null;
-        private static  void InitializeFactory()
+        private static Dictionary<AsteroidType, Type> m_asteroidsByTag;
+        private static bool m_isInitialized => m_asteroidsByTag != null;
+        private static void InitializeFactory()
         {
-        if(IsInitialized)
-            return;
+            if (m_isInitialized)
+                return;
 
             var sizes = Assembly.GetAssembly(typeof(AsteroidBase)).GetTypes()
-                .Where(attribute => attribute.IsClass 
-                && !attribute.IsAbstract 
+                .Where(attribute => attribute.IsClass
+                && !attribute.IsAbstract
                 && attribute.IsSubclassOf(typeof(AsteroidBase)));
 
-            AsteroidsByTag = new Dictionary<AsteroidType, Type>();
+            m_asteroidsByTag = new Dictionary<AsteroidType, Type>();
 
-            foreach(var type in sizes)
+            foreach (var type in sizes)
             {
                 var tempAttribute = Activator.CreateInstance(type) as AsteroidBase;
-                AsteroidsByTag.Add(tempAttribute.MyObstacleType, type);
+                m_asteroidsByTag.Add(tempAttribute.MyObstacleType, type);
             }
         }
 
         public AsteroidData GetData(AsteroidType obstacleType)
         {
             InitializeFactory();
-            if(AsteroidsByTag.ContainsKey(obstacleType))
+            if (m_asteroidsByTag.ContainsKey(obstacleType))
             {
-                Type type = AsteroidsByTag[obstacleType];
+                Type type = m_asteroidsByTag[obstacleType];
 
-                var asteroidItem = Activator.CreateInstance(type) as AsteroidBase; 
+                var asteroidItem = Activator.CreateInstance(type) as AsteroidBase;
                 var data = asteroidItem.MyData;
                 return data;
             }
-            
+
             return null;
         }
 
         internal static IEnumerable<AsteroidType> GetSizesByType()
         {
-            return AsteroidsByTag.Keys;
+            return m_asteroidsByTag.Keys;
         }
     }
 
-    public interface IAsteroidFactoryInterface<T,K>
+    public interface IAsteroidFactoryInterface<T, K>
     {
         K GetData(T t);
     }

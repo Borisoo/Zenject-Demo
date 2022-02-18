@@ -12,23 +12,22 @@ public class RequireInterfaceDrawer : PropertyDrawer
     {
         if (property.propertyType == SerializedPropertyType.ObjectReference)
         {
-        
+
             var requiredAttribute = this.attribute as RequireInterfaceAttribute;
-            
+
             EditorGUI.BeginProperty(position, label, property);
- 
+
             property.objectReferenceValue = EditorGUI.ObjectField(position, label, property.objectReferenceValue, requiredAttribute.requiredType, true);
-        
+
             EditorGUI.EndProperty();
         }
         else
         {
-  
+
             var previousColor = GUI.color;
             GUI.color = Color.red;
 
             EditorGUI.LabelField(position, label, new GUIContent("Property is not a reference type"));
-            // Revert color change.
             GUI.color = previousColor;
         }
     }

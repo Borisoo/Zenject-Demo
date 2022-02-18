@@ -6,10 +6,10 @@ using System;
 
 namespace Asteroids
 {
-    public class SpaceObjectBehaviour<T,K> : MonoBehaviour
+    public class SpaceObjectBehaviour<T, K> : MonoBehaviour
     {
-        public virtual Vector3 Position{ get; set; }
-       
+        public virtual Vector3 Position { get; set; }
+
         [Inject]
         public Explosion.Factory ExplosionFactory;
 
@@ -25,6 +25,6 @@ namespace Asteroids
                 Debug.Log("object position missing");
             }
         }
-        public virtual void Kill(T type, K projectile){}
+        public virtual void Kill(T type, K projectile) { }
     }
 }

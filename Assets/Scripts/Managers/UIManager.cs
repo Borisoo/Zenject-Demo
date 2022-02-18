@@ -13,19 +13,19 @@ namespace Asteroids
         [SerializeField] private GameObject GameScreen;
         [SerializeField] private GameObject EndScreen;
 
-        private  void Start()
+        private void Start()
         {
-           NavigationController.Push(HomeScreen,true,true);
+            NavigationController.Push(HomeScreen, true, true);
         }
-        
+
         public void ShowGameScreen()
         {
-            NavigationController.Push(GameScreen,false,true);
+            NavigationController.Push(GameScreen, false, true);
         }
-        
+
         public void ShowEndScreen()
         {
-            NavigationController.Push(EndScreen,false,true);
+            NavigationController.Push(EndScreen, false, true);
         }
     }
 }

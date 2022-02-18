@@ -7,7 +7,7 @@ namespace Asteroids
 {
     public sealed class UINavigationController : INavigationControllerInterface
     {
-        public  bool popUpEnabled;
+        public bool popUpEnabled;
         private Stack<GameObject> navigationStack = new Stack<GameObject>();
 
         public void Push(GameObject popup, bool newFlow = true, bool shouldActivateImmediately = true)
@@ -24,7 +24,7 @@ namespace Asteroids
 
             navigationStack.Push(popup);
             if (!popUpEnabled) { popUpEnabled = true; }
-    
+
             if (shouldActivateImmediately)
             {
                 ActivatePopup(popup);
@@ -35,7 +35,7 @@ namespace Asteroids
         {
             if (navigationStack.Count > 0)
             {
-                GameObject popupToClose = navigationStack.Pop(); 
+                GameObject popupToClose = navigationStack.Pop();
                 DeactivatePopup(popupToClose);
 
             }

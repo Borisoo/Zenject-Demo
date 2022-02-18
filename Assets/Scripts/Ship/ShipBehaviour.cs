@@ -5,53 +5,53 @@ using Zenject;
 
 namespace Asteroids
 {
-public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType,IProjectileInterface>, IShipInterface
-{
-    private IInputInterface _inputInterface;
-    private IGameController _gameController;
-    private bool isDead;
-    
-    [Inject]
-    public void Setup(IInputInterface inputInterface, IGameController gameController)
+    public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType, IProjectileInterface>, IShipInterface
     {
-        _inputInterface = inputInterface;
-        _gameController = gameController;
-    }
+        private IInputInterface _inputInterface;
+        private IGameController _gameController;
+        private bool isDead;
 
-    public GameObject TargetObject{ get => this.gameObject; }
-    public Vector3 ShipPosition{ get => this.transform.position; }
-    public override Vector3 Position{ get => this.transform.position; }
-    public bool IsDead => isDead;
-
-
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.CompareTag(Tags.Obstacle))
+        [Inject]
+        public void Setup(IInputInterface inputInterface, IGameController gameController)
         {
-           InvokeDeath();
+            _inputInterface = inputInterface;
+            _gameController = gameController;
+        }
+
+        public GameObject TargetObject { get => this.gameObject; }
+        public Vector3 ShipPosition { get => this.transform.position; }
+        public override Vector3 Position { get => this.transform.position; }
+        public bool IsDead => isDead;
+
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag(Tags.Obstacle))
+            {
+                InvokeDeath();
+            }
+        }
+
+        public override void Kill(BulletType type, IProjectileInterface projectile)
+        {
+            if (BulletType.FromEnemy == type)
+            {
+                InvokeDeath();
+                projectile.DestroyProjectile();
+            }
+        }
+
+        public void InvokeDeath()
+        {
+            SpawnExplosion();
+            _gameController.EndGame();
+            isDead = true;
+            gameObject.SetActive(false);
+        }
+
+        public override void SpawnExplosion()
+        {
+            base.SpawnExplosion();
         }
     }
-
-    public override void Kill(BulletType type,IProjectileInterface projectile)
-    {
-        if(BulletType.FromEnemy == type)
-        {
-            InvokeDeath();
-            projectile.DestroyProjectile();
-        }
-    }
-
-    public void InvokeDeath()
-    {
-        SpawnExplosion();
-        _gameController.EndGame();
-       isDead = true;
-       gameObject.SetActive(false);
-    }
-
-    public override void SpawnExplosion()
-    {
-       base.SpawnExplosion();
-    }
-}
 }

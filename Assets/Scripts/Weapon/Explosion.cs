@@ -3,14 +3,14 @@ using Zenject;
 using System;
 
 
-namespace  Asteroids
+namespace Asteroids
 {
     public class Explosion : MonoBehaviour, IPoolable<IMemoryPool>
     {
-        [SerializeField]private  float _lifeTime;
-        [SerializeField]private  ParticleSystem _particleSystem;
+        [SerializeField] private float _lifeTime;
+        [SerializeField] private ParticleSystem _particleSystem;
 
-        private  float _startTime;
+        private float _startTime;
         private IMemoryPool _pool;
 
         public void Update()
@@ -21,7 +21,7 @@ namespace  Asteroids
             }
         }
 
-        public void OnDespawned(){}
+        public void OnDespawned() { }
 
         public void OnSpawned(IMemoryPool pool)
         {

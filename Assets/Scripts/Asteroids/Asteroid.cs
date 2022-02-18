@@ -7,160 +7,159 @@ using ModestTree;
 
 namespace Asteroids
 {
-
-public sealed class Asteroid : SpaceObjectBehaviour<BulletType,IProjectileInterface> , IPoolable<IMemoryPool>
-{
-    private LevelHelper _level;
-    [Inject] private AsteroidSpawnerSettings _settings;
-    private float _startTime;
-    private int numberOfFragments;
-    private int score;
-    private Vector3 scale;
-    private AsteroidType asteroidType;
-    private IMemoryPool _pool;
-
-
-    private AsteroidType fragmentType;
-    private  ISpawnerInterface<AsteroidType> _spawnerInterface;
-    private IScoreHandler _scoreHandler;
-    private Vector3 screenCenter;
-    private Rigidbody _rigidBody;
-
-
-    public int Score{ set => score = value; }
-    public Vector3 Scale { set => scale = value; }
-    public int NumberOfFragments{ set => numberOfFragments = value; }
-    public AsteroidType FragmentType{ set => fragmentType = value; }
-    public AsteroidType AsteroidType{ set => asteroidType = value; }
-   
-
-    [Inject]
-    public void Construct( LevelHelper levelHelper,ISpawnerInterface<AsteroidType>  spawner,IScoreHandler  scoreHandler)
+    public sealed class Asteroid : SpaceObjectBehaviour<BulletType, IProjectileInterface>, IPoolable<IMemoryPool>
     {
-        _level = levelHelper;
-        _spawnerInterface = spawner;
-        _scoreHandler = scoreHandler;
-    }
+        private LevelHelper _level;
+        [Inject] private AsteroidSpawnerSettings _settings;
+        private float _startTime;
+        private int numberOfFragments;
+        private int score;
+        private Vector3 scale;
+        private AsteroidType asteroidType;
+        private IMemoryPool _pool;
 
-    public override Vector3 Position { get =>  transform.position; set => transform.position = value; }
+
+        private AsteroidType fragmentType;
+        private ISpawnerInterface<AsteroidType> _spawnerInterface;
+        private IScoreHandler _scoreHandler;
+        private Vector3 screenCenter;
+        private Rigidbody _rigidBody;
 
 
-    private void Start()
-    {
-        _rigidBody = GetComponent<Rigidbody>();
-        Vector3 dir = Vector3.zero - transform.position;
-        _rigidBody.AddForce(GetRandomDirection() * 100f);
-    }
+        public int Score { set => score = value; }
+        public Vector3 Scale { set => scale = value; }
+        public int NumberOfFragments { set => numberOfFragments = value; }
+        public AsteroidType FragmentType { set => fragmentType = value; }
+        public AsteroidType AsteroidType { set => asteroidType = value; }
 
-    private Vector3 GetRandomDirection()
-    {
-        var theta = UnityEngine.Random.Range(0, Mathf.PI * 2.0f);
-        return new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0);
-    }
 
-    private void Update()
-    {
-        if (Time.realtimeSinceStartup - _startTime > _settings.lifeTime)
+        [Inject]
+        public void Construct(LevelHelper levelHelper, ISpawnerInterface<AsteroidType> spawner, IScoreHandler scoreHandler)
         {
-            _pool.Despawn(this);
+            _level = levelHelper;
+            _spawnerInterface = spawner;
+            _scoreHandler = scoreHandler;
         }
 
-        Position = transform.position;
-        CheckForTeleport();
-    }
-    
-    public class Factory : PlaceholderFactory<Asteroid> {  }
+        public override Vector3 Position { get => transform.position; set => transform.position = value; }
 
-    public override void Kill(BulletType type, IProjectileInterface projectile)
-    {
-        if(BulletType.FromPlayer == type)
+
+        private void Start()
         {
-            SpawnExplosion();
-            UpdateScore();
-            BreakIntoFragments();
-            projectile.DestroyProjectile();
-            this.gameObject.SetActive(false);
-        }
-    }
-
-    private void UpdateScore()
-    {
-        _scoreHandler.UpdateScore(score);
-    }
-
-    private void BreakIntoFragments()
-    {
-        if(!CanBreak())
-        {
-            SpawnExplosion();  
-            return; 
+            _rigidBody = GetComponent<Rigidbody>();
+            Vector3 dir = Vector3.zero - transform.position;
+            _rigidBody.AddForce(GetRandomDirection() * 100f);
         }
 
-        for(int i =0; i < numberOfFragments; i++)
+        private Vector3 GetRandomDirection()
         {
-            _spawnerInterface.SpawnAtPosition(fragmentType, this.transform.position);
-        }        
-    }
-
-    private bool CanBreak()
-    {
-        if(asteroidType == AsteroidType.smallAsteroid || fragmentType == AsteroidType.none
-        || asteroidType == AsteroidType.mediumAsteroid){ return false; }
-
-        return true;
-    }
-
-    public void OnSpawned(IMemoryPool pool)
-    {
-        _pool = pool;
-        _startTime = Time.realtimeSinceStartup;
-    }
-
-    public void OnDespawned()
-    {
-        _pool = null;
-    }
-
-    private void CheckForTeleport()
-    {
-        if (Position.x > _level.Right + ScaleFactor && IsMovingInDirection(Vector3.right))
-        {
-            transform.SetX(_level.Left - ScaleFactor);
-        }
-        else if (Position.x < _level.Left - ScaleFactor && IsMovingInDirection(-Vector3.right))
-        {
-            transform.SetX(_level.Right + ScaleFactor);
-        }
-        else if (Position.y < _level.Bottom - ScaleFactor && IsMovingInDirection(-Vector3.up))
-        {
-            transform.SetY(_level.Top + ScaleFactor);
-        }
-        else if (Position.y > _level.Top + ScaleFactor && IsMovingInDirection(Vector3.up))
-        {
-            transform.SetY(_level.Bottom - ScaleFactor);
+            var theta = UnityEngine.Random.Range(0, Mathf.PI * 2.0f);
+            return new Vector3(Mathf.Cos(theta), Mathf.Sin(theta), 0);
         }
 
-        transform.RotateAround(transform.position, Vector3.up, 30 * Time.deltaTime);
-    }
-
-    internal bool IsMovingInDirection(Vector3 dir)
-    {
-        return Vector3.Dot(dir, _rigidBody.velocity) > 0;
-    }
-
-    public float ScaleFactor
-    {
-        get
+        private void Update()
         {
-            var scale = transform.localScale;
-            Assert.That(scale[0] == scale[1] && scale[1] == scale[2]);
-            return scale[0];
+            if (Time.realtimeSinceStartup - _startTime > _settings.lifeTime)
+            {
+                _pool.Despawn(this);
+            }
+
+            Position = transform.position;
+            CheckForTeleport();
         }
-        set
+
+        public class Factory : PlaceholderFactory<Asteroid> { }
+
+        public override void Kill(BulletType type, IProjectileInterface projectile)
         {
-            transform.localScale = new Vector3(value, value, value);
-            _rigidBody.mass = value;
+            if (BulletType.FromPlayer == type)
+            {
+                SpawnExplosion();
+                UpdateScore();
+                BreakIntoFragments();
+                projectile.DestroyProjectile();
+                this.gameObject.SetActive(false);
+            }
+        }
+
+        private void UpdateScore()
+        {
+            _scoreHandler.UpdateScore(score);
+        }
+
+        private void BreakIntoFragments()
+        {
+            if (!CanBreak())
+            {
+                SpawnExplosion();
+                return;
+            }
+
+            for (int i = 0; i < numberOfFragments; i++)
+            {
+                _spawnerInterface.SpawnAtPosition(fragmentType, this.transform.position);
+            }
+        }
+
+        private bool CanBreak()
+        {
+            if (asteroidType == AsteroidType.smallAsteroid || fragmentType == AsteroidType.none
+            || asteroidType == AsteroidType.mediumAsteroid) { return false; }
+
+            return true;
+        }
+
+        public void OnSpawned(IMemoryPool pool)
+        {
+            _pool = pool;
+            _startTime = Time.realtimeSinceStartup;
+        }
+
+        public void OnDespawned()
+        {
+            _pool = null;
+        }
+
+        private void CheckForTeleport()
+        {
+            if (Position.x > _level.Right + ScaleFactor && IsMovingInDirection(Vector3.right))
+            {
+                transform.SetX(_level.Left - ScaleFactor);
+            }
+            else if (Position.x < _level.Left - ScaleFactor && IsMovingInDirection(-Vector3.right))
+            {
+                transform.SetX(_level.Right + ScaleFactor);
+            }
+            else if (Position.y < _level.Bottom - ScaleFactor && IsMovingInDirection(-Vector3.up))
+            {
+                transform.SetY(_level.Top + ScaleFactor);
+            }
+            else if (Position.y > _level.Top + ScaleFactor && IsMovingInDirection(Vector3.up))
+            {
+                transform.SetY(_level.Bottom - ScaleFactor);
+            }
+
+            transform.RotateAround(transform.position, Vector3.up, 30 * Time.deltaTime);
+        }
+
+        internal bool IsMovingInDirection(Vector3 dir)
+        {
+            return Vector3.Dot(dir, _rigidBody.velocity) > 0;
+        }
+
+        public float ScaleFactor
+        {
+            get
+            {
+                var scale = transform.localScale;
+                Assert.That(scale[0] == scale[1] && scale[1] == scale[2]);
+                return scale[0];
+            }
+            set
+            {
+                transform.localScale = new Vector3(value, value, value);
+                _rigidBody.mass = value;
+            }
         }
     }
-}
 }

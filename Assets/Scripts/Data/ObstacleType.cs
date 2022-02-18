@@ -4,7 +4,7 @@ public enum AsteroidType
     smallAsteroid,
     mediumAsteroid,
     LargeAsteroid,
-  
+
 }
 
 public enum UFOType

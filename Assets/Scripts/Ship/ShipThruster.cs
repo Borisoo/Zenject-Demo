@@ -5,62 +5,57 @@ using Zenject;
 
 namespace Asteroids
 {
-public sealed class ShipThruster : MonoBehaviour, IInputProxy, IShipDataProxy
-{
-    public ShipData _shipData;
-    private float speed;
-    private float rotateSpeed;
-
-    //bounds
-    private float MaxX,MinX;
-    private float MinY,MaxY;
-
-    private IInputInterface m_inputInterface;
-
-    public IInputInterface InputDependency{ get => m_inputInterface; set => m_inputInterface = value; }
-
-    public ShipData shipData{ get => _shipData; set => _shipData = value; }
-
-    private Rigidbody rigidbody;
-
-    [Inject]
-    public void Setup(IInputInterface inputInterface)
+    public sealed class ShipThruster : MonoBehaviour, IInputProxy
     {
-        m_inputInterface = inputInterface;
-    }
-
-    void Start()
-    {
-        Initialize();
-        rigidbody = GetComponent<Rigidbody>();
-    }
-
-    void FixedUpdate()
-    {
-        Move();
-        Rotate();
-    }
-
-    void Initialize()
-    {
-        speed = shipData.thrustSpeed;
-        rotateSpeed = shipData.rotateSpeed;
-    }
-
-    void Move()
-    {
-        if(m_inputInterface.Vertical != 0)
+        [SerializeField] private ShipData m_shipData;
+        private Rigidbody m_rigidBody;
+        private float m_speed;
+        private float m_rotateSpeed;
+        private IInputInterface m_inputInterface;
+        public IInputInterface InputDependency
         {
-            Vector3 thrustForce = m_inputInterface.Vertical * transform.up * speed  * Time.deltaTime;;  
-            rigidbody.velocity = thrustForce;
+            get => m_inputInterface;
+            set => m_inputInterface = value;
+        }
+
+        [Inject]
+        public void Setup(IInputInterface inputInterface)
+        {
+            m_inputInterface = inputInterface;
+        }
+
+        private  void Start()
+        {
+            Initialize();
+            m_rigidBody = GetComponent<Rigidbody>();
+        }
+
+        private void FixedUpdate()
+        {
+            Move();
+            Rotate();
+        }
+
+        private void Initialize()
+        {
+            m_speed = m_shipData.thrustSpeed;
+            m_rotateSpeed = m_shipData.rotateSpeed;
+        }
+
+        private void Move()
+        {
+            if (m_inputInterface.Vertical != 0)
+            {
+                Vector3 thrustForce = m_inputInterface.Vertical * transform.up * m_speed * Time.deltaTime; ;
+                m_rigidBody.velocity = thrustForce;
+            }
+        }
+
+        private void Rotate()
+        {
+            float turn = m_inputInterface.Horizontal * Time.deltaTime * m_rotateSpeed;
+            Vector3 torque = transform.forward * -turn;
+            transform.Rotate(torque);
         }
     }
-
-    void Rotate()
-    {
-        float turn = m_inputInterface.Horizontal * Time.deltaTime * rotateSpeed;
-        Vector3 torque = transform.forward * -turn;
-        transform.Rotate(torque);
-    }
-}
 }

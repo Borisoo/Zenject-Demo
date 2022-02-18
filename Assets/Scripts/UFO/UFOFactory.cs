@@ -7,21 +7,21 @@ using System.Reflection;
 
 namespace Asteroids
 {
-    public class UFODataFactory : IUFOFactoryInterface<UFOType,UFOData>
+    public class UFODataFactory : IUFOFactoryInterface<UFOType, UFOData>
     {
-        private static  Dictionary<UFOType,Type> UFOByTag;
+        private static Dictionary<UFOType, Type> UFOByTag;
         private static bool IsInitialized => UFOByTag != null;
-        private static  void InitializeFactory()
+        private static void InitializeFactory()
         {
-        if(IsInitialized)
-            return;
+            if (IsInitialized)
+                return;
 
             var ufoTypes = Assembly.GetAssembly(typeof(UFOBase)).GetTypes()
                 .Where(attribute => attribute.IsClass && !attribute.IsAbstract && attribute.IsSubclassOf(typeof(UFOBase)));
 
             UFOByTag = new Dictionary<UFOType, Type>();
 
-            foreach(var type in ufoTypes)
+            foreach (var type in ufoTypes)
             {
                 var tempAttribute = Activator.CreateInstance(type) as UFOBase;
                 UFOByTag.Add(tempAttribute.MyType, type);
@@ -32,11 +32,11 @@ namespace Asteroids
         {
             InitializeFactory();
 
-            if(UFOByTag.ContainsKey(ufoType))
+            if (UFOByTag.ContainsKey(ufoType))
             {
                 Type type = UFOByTag[ufoType];
 
-                var ufoItem = Activator.CreateInstance(type) as UFOBase; 
+                var ufoItem = Activator.CreateInstance(type) as UFOBase;
                 var points = ufoItem.Points;
                 return points;
             }
@@ -47,11 +47,11 @@ namespace Asteroids
         {
             InitializeFactory();
 
-            if(UFOByTag.ContainsKey(ufoType))
+            if (UFOByTag.ContainsKey(ufoType))
             {
                 Type type = UFOByTag[ufoType];
 
-                var ufoItem = Activator.CreateInstance(type) as UFOBase; 
+                var ufoItem = Activator.CreateInstance(type) as UFOBase;
                 var ufoData = ufoItem.MyData;
                 return ufoData;
             }
@@ -59,9 +59,9 @@ namespace Asteroids
         }
     }
 
-    public interface IUFOFactoryInterface<T,K>
+    public interface IUFOFactoryInterface<T, K>
     {
-    int GetScore(T t);
-    K GetData(T t);
+        int GetScore(T t);
+        K GetData(T t);
     }
 }

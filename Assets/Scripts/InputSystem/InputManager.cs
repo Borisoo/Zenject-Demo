@@ -6,43 +6,43 @@ using Zenject;
 
 namespace Asteroids
 {
-public class InputManager : IInputInterface
-{
-    private float _horizontal;
-    private float _vertical;
-    private bool _Fire;
-    private UnityAction _FireAction;
-
-    public float Horizontal{ get => GetTurnAxis();   }
-
-    public float Vertical{get => GetForwardThrust(); }
-
-    public bool Fire{ get => IsShooting();  }
-
-    public UnityAction FireAction
+    public class InputManager : IInputInterface
     {
-        get => _FireAction;
-        set => _FireAction = value;
-    }
+        private float _horizontal;
+        private float _vertical;
+        private bool _Fire;
+        private UnityAction _FireAction;
 
-    private float GetForwardThrust()
-    {
-        return  _vertical = Input.GetAxis("Vertical");
-    }
+        public float Horizontal { get => GetTurnAxis(); }
 
-    public float GetTurnAxis()
-    {
-        return  _horizontal = Input.GetAxis("Horizontal");
-    }
+        public float Vertical { get => GetForwardThrust(); }
 
-    public bool IsShooting()
-    {
-        return Input.GetKey(KeyCode.Space);
-    }
+        public bool Fire { get => IsShooting(); }
 
-    public  bool IsHyperspacing()
-    {
-        return Input.GetButtonDown("Fire2");
+        public UnityAction FireAction
+        {
+            get => _FireAction;
+            set => _FireAction = value;
+        }
+
+        private float GetForwardThrust()
+        {
+            return _vertical = Input.GetAxis("Vertical");
+        }
+
+        public float GetTurnAxis()
+        {
+            return _horizontal = Input.GetAxis("Horizontal");
+        }
+
+        public bool IsShooting()
+        {
+            return Input.GetKey(KeyCode.Space);
+        }
+
+        public bool IsHyperspacing()
+        {
+            return Input.GetButtonDown("Fire2");
+        }
     }
-}
 }

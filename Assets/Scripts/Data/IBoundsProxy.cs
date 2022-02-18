@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace Asteroids
 {
-public interface IBoundsDataProxy
-{
-      BoundsData boundsData{ get; set; }
-}
-
+      public interface IBoundsDataProxy
+      {
+            BoundsData boundsData{ get; set; }
+      }
 }

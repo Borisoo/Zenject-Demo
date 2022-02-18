@@ -2,8 +2,8 @@
 namespace Asteroids
 {
 
-public interface IProjectileInterface
-{
-    void DestroyProjectile();
-}
+    public interface IProjectileInterface
+    {
+        void DestroyProjectile();
+    }
 }

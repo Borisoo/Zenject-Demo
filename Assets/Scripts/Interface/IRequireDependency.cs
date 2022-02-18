@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace Asteroids
 {
-
-public interface IRequireDependency<T>
-{
-   T DependencyInterface{get;set;}
-}
-
+      public interface IRequireDependency<T>
+      {
+         T DependencyInterface { get; set; }
+      }
 }

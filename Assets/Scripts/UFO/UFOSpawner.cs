@@ -7,96 +7,96 @@ using ModestTree;
 
 namespace Asteroids
 {
-public sealed class UFOSpawner : ITickable, ISpawnerInterface<UFOType>
-{
-    private UFO.Factory _UFOFactory;
-    private LevelHelper _level;
-    private IUFOFactoryInterface<UFOType,UFOData> UFODataFactory;
-    private float _timer;
-
-    [Inject]
-    private UFOSpawnerSettings _settings;
-
-    bool canSpawn;
-
-
-    [Inject]
-    public void Construct(UFO.Factory ufoFactory, LevelHelper level, IUFOFactoryInterface<UFOType,UFOData> ufoDataFactoryInterface)
+    public sealed class UFOSpawner : ITickable, ISpawnerInterface<UFOType>
     {
-        _UFOFactory = ufoFactory;
-        _level = level;
-         UFODataFactory = ufoDataFactoryInterface;
-    }
-    public void Start()
-    {
-        canSpawn = true;
-    }
+        private UFO.Factory _UFOFactory;
+        private LevelHelper _level;
+        private IUFOFactoryInterface<UFOType, UFOData> UFODataFactory;
+        private float _timer;
 
-    public void Tick()
-    {
-        SpawnUFOAtInterval();
-    }
+        [Inject]
+        private UFOSpawnerSettings _settings;
 
-    private void SpawnUFOAtInterval()
-    {
-        if(!canSpawn){ return; }
+        bool canSpawn;
 
-        _timer += Time.deltaTime;
-        if(_timer > _settings.spawnDelay)
+
+        [Inject]
+        public void Construct(UFO.Factory ufoFactory, LevelHelper level, IUFOFactoryInterface<UFOType, UFOData> ufoDataFactoryInterface)
         {
-            _timer = 0;
-           SpawnUFO();
+            _UFOFactory = ufoFactory;
+            _level = level;
+            UFODataFactory = ufoDataFactoryInterface;
         }
-    }
-
-    private void SpawnUFO()
-    {
-        UFO ufo = _UFOFactory.Create(); 
-
-        var ufoType = RandomEnum<UFOType>.Get(); 
-        var score = UFODataFactory.GetScore(ufoType);
-        var ufoData = UFODataFactory.GetData(ufoType);
-
-        ufo.Score = score;
-        ufo.transform.position = GetRandomStartPosition(ufo.Scale); 
-    }
-
-    Vector3 GetRandomStartPosition(float scale)
-    {
-        var area = RandomEnum<AreaType>.Get();
-        var rand = UnityEngine.Random.Range(0.0f, 1.0f);
-
-        switch (area)
+        public void Start()
         {
-            case AreaType.top:
+            canSpawn = true;
+        }
+
+        public void Tick()
+        {
+            SpawnUFOAtInterval();
+        }
+
+        private void SpawnUFOAtInterval()
+        {
+            if (!canSpawn) { return; }
+
+            _timer += Time.deltaTime;
+            if (_timer > _settings.spawnDelay)
             {
-                return new Vector3(_level.Left + rand * _level.Width, _level.Top + scale, 0);
-            }
-            case AreaType.bottom:
-            {
-                return new Vector3(_level.Left + rand * _level.Width, _level.Bottom - scale, 0);
-            }
-            case AreaType.right:
-            {
-                return new Vector3(_level.Right + scale, _level.Bottom + rand * _level.Height, 0);
-            }
-            case AreaType.left:
-            {
-                return new Vector3(_level.Left - scale, _level.Bottom + rand * _level.Height, 0);
+                _timer = 0;
+                SpawnUFO();
             }
         }
 
-        throw Assert.CreateException();
-    }
+        private void SpawnUFO()
+        {
+            UFO ufo = _UFOFactory.Create();
 
-    public void SpawnAtPosition(UFOType type, Vector3 pos)
-    {
+            var ufoType = RandomEnum<UFOType>.Get();
+            var score = UFODataFactory.GetScore(ufoType);
+            var ufoData = UFODataFactory.GetData(ufoType);
 
-    }
+            ufo.Score = score;
+            ufo.transform.position = GetRandomStartPosition(ufo.Scale);
+        }
 
-    public void Stop()
-    {
-        canSpawn = false;
+        Vector3 GetRandomStartPosition(float scale)
+        {
+            var area = RandomEnum<AreaType>.Get();
+            var rand = UnityEngine.Random.Range(0.0f, 1.0f);
+
+            switch (area)
+            {
+                case AreaType.top:
+                    {
+                        return new Vector3(_level.Left + rand * _level.Width, _level.Top + scale, 0);
+                    }
+                case AreaType.bottom:
+                    {
+                        return new Vector3(_level.Left + rand * _level.Width, _level.Bottom - scale, 0);
+                    }
+                case AreaType.right:
+                    {
+                        return new Vector3(_level.Right + scale, _level.Bottom + rand * _level.Height, 0);
+                    }
+                case AreaType.left:
+                    {
+                        return new Vector3(_level.Left - scale, _level.Bottom + rand * _level.Height, 0);
+                    }
+            }
+
+            throw Assert.CreateException();
+        }
+
+        public void SpawnAtPosition(UFOType type, Vector3 pos)
+        {
+
+        }
+
+        public void Stop()
+        {
+            canSpawn = false;
+        }
     }
-}
 }

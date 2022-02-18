@@ -1,5 +1,5 @@
- using UnityEngine;
- 
+using UnityEngine;
+
 public static class UnityExtensionMethods
 {
     public static void SetX(this Transform transform, float x)

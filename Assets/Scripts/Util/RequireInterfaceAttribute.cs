@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class RequireInterfaceAttribute : PropertyAttribute
 {
-  public System.Type requiredType { get; set; }
-  public RequireInterfaceAttribute(System.Type type)
-  {
-      this.requiredType = type;
-  }
+    public System.Type requiredType { get; set; }
+    public RequireInterfaceAttribute(System.Type type)
+    {
+        this.requiredType = type;
+    }
 }

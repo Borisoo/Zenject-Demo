@@ -158,8 +158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02accafe9ca046d9ac9806cb0294141, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _boundsData: {fileID: 11400000, guid: 0d367fde0e8f647bebff906bdf4dfa7e, type: 2}
-  _shipData: {fileID: 11400000, guid: da418903439294c66a4f97327cf6573e, type: 2}
+  m_shipData: {fileID: 11400000, guid: da418903439294c66a4f97327cf6573e, type: 2}
 --- !u!54 &8830323304514886159
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -251,8 +250,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b137fa7b4aa4d999963ea0666018ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileData: {fileID: 11400000, guid: bfe48315602a34a2b816058afa29e213, type: 2}
-  Nozzle: {fileID: 8830323304514886157}
+  m_projectileData: {fileID: 11400000, guid: bfe48315602a34a2b816058afa29e213, type: 2}
+  m_nozzle: {fileID: 8830323304514886157}
 --- !u!114 &415294088
 MonoBehaviour:
   m_ObjectHideFlags: 0

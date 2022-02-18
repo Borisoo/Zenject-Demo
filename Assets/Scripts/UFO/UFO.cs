@@ -8,40 +8,41 @@ using System;
 namespace Asteroids
 {
 
-    public sealed class UFO : SpaceObjectBehaviour<BulletType,IProjectileInterface>, IPoolable<IMemoryPool>
+    public sealed class UFO : SpaceObjectBehaviour<BulletType, IProjectileInterface>, IPoolable<IMemoryPool>
     {
         private IMemoryPool _pool;
         private int score;
         private UFOData uFOData;
         private float _startTime;
-        private  INPCState currentState;
+        private INPCState currentState;
         private IScoreHandler _scoreHandler;
-        
-        
+
+
         [Inject]
-        public void Construct(IScoreHandler  scoreHandler, Bullet.Factory bulletFactory)
+        public void Construct(IScoreHandler scoreHandler, Bullet.Factory bulletFactory)
         {
-        _scoreHandler = scoreHandler;
-        _bulletFactory = bulletFactory;
+            _scoreHandler = scoreHandler;
+            _bulletFactory = bulletFactory;
         }
 
         [Inject] private UFOSpawnerSettings _settings;
         [Inject] private IShipInterface _playerShip;
-    
 
-        [Inject] [HideInInspector]
+
+        [Inject]
+        [HideInInspector]
         public readonly UFOSettings ufoSettings;
         private Rigidbody _rigidBody;
-        public override Vector3 Position { get =>  transform.position; set => transform.position = value; }
+        public override Vector3 Position { get => transform.position; set => transform.position = value; }
 
         //npc states
         public readonly UFOAttackState attackState = new UFOAttackState();
         public readonly UFORoamState roamState = new UFORoamState();
         public readonly UFOIdleState idleState = new UFOIdleState();
-    
+
         public string currentStateName;
-        public  Bullet.Factory _bulletFactory;
-        public int Score{ set => score = value; }
+        public Bullet.Factory _bulletFactory;
+        public int Score { set => score = value; }
         public IShipInterface PlayerShip { get => _playerShip; }
         public Vector3 RightDir()
         {
@@ -53,9 +54,9 @@ namespace Asteroids
             _rigidBody = GetComponent<Rigidbody>();
 
             attackState.SetNPC = this;
-            roamState.SetNPC = this; 
+            roamState.SetNPC = this;
             idleState.SetNPC = this;
-    
+
             currentState = roamState;
         }
 
@@ -65,9 +66,9 @@ namespace Asteroids
             currentStateName = "" + currentState;
         }
 
-        public override void Kill(BulletType type,IProjectileInterface projectile)
+        public override void Kill(BulletType type, IProjectileInterface projectile)
         {
-            if(BulletType.FromPlayer == type)
+            if (BulletType.FromPlayer == type)
             {
                 SpawnExplosion();
                 UpdateScore();
@@ -89,7 +90,7 @@ namespace Asteroids
 
         public override void SpawnExplosion()
         {
-        base.SpawnExplosion();
+            base.SpawnExplosion();
         }
 
         private void UpdateScore()
@@ -112,6 +113,6 @@ namespace Asteroids
             }
         }
 
-        public class Factory : PlaceholderFactory<UFO> {  }
+        public class Factory : PlaceholderFactory<UFO> { }
     }
 }
