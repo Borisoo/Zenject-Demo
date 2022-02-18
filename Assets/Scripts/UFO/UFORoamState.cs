@@ -1,6 +1,4 @@
 using UnityEngine;
-using Zenject;
-
 
 namespace Asteroids
 {
@@ -18,15 +16,16 @@ namespace Asteroids
 
         public INPCState DoState(UFO npc)
         {
-            if (npc.PlayerShip.IsDead) { return npc.roamState; }
+            if (npc.PlayerShip.IsDead)
+            {
+                return npc.roamState;
+            }
 
             var lookDir = npc.PlayerShip.ShipPosition - npc.transform.position;
-
-            npc.transform.position += lookDir * npc.ufoSettings.speed * Time.deltaTime;
-
+            npc.transform.position += lookDir * npc.UfoSettings.speed * Time.deltaTime;
             Quaternion targetRotation = Quaternion.LookRotation(lookDir, Vector3.forward);
 
-            if (Vector3.Distance(npc.transform.position, npc.PlayerShip.ShipPosition) < npc.ufoSettings.attackRange)
+            if (Vector3.Distance(npc.transform.position, npc.PlayerShip.ShipPosition) < npc.UfoSettings.attackRange)
             {
                 return npc.attackState;
             }

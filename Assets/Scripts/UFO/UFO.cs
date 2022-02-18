@@ -1,29 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using ModestTree;
-using System;
 
 namespace Asteroids
 {
 
     public sealed class UFO : SpaceObjectBehaviour<BulletType, IProjectileInterface>, IPoolable<IMemoryPool>
     {
-        private IMemoryPool _pool;
-        private int score;
-        private UFOData uFOData;
-        private float _startTime;
-        private INPCState currentState;
-        private IScoreHandler _scoreHandler;
+        private IMemoryPool m_pool;
+        private int m_score;
+        private UFOData m_ufoData;
+        private float m_startTime;
+        private INPCState m_currentState;
+        private IScoreHandler m_scoreHandler;
 
 
-        [Inject]
-        public void Construct(IScoreHandler scoreHandler, Bullet.Factory bulletFactory)
-        {
-            _scoreHandler = scoreHandler;
-            _bulletFactory = bulletFactory;
-        }
 
         [Inject] private UFOSpawnerSettings _settings;
         [Inject] private IShipInterface _playerShip;
@@ -31,19 +22,26 @@ namespace Asteroids
 
         [Inject]
         [HideInInspector]
-        public readonly UFOSettings ufoSettings;
+        public readonly UFOSettings UfoSettings;
         private Rigidbody _rigidBody;
-        public override Vector3 Position { get => transform.position; set => transform.position = value; }
-
-        //npc states
         public readonly UFOAttackState attackState = new UFOAttackState();
         public readonly UFORoamState roamState = new UFORoamState();
         public readonly UFOIdleState idleState = new UFOIdleState();
-
-        public string currentStateName;
         public Bullet.Factory _bulletFactory;
-        public int Score { set => score = value; }
+        public int Score { set => m_score = value; }
         public IShipInterface PlayerShip { get => _playerShip; }
+        [Inject]
+        public void Construct(IScoreHandler scoreHandler, Bullet.Factory bulletFactory)
+        {
+            m_scoreHandler = scoreHandler;
+            _bulletFactory = bulletFactory;
+        }
+
+        public override Vector3 Position
+        {
+            get => transform.position;
+            set => transform.position = value;
+        }
         public Vector3 RightDir()
         {
             return transform.right;
@@ -57,13 +55,12 @@ namespace Asteroids
             roamState.SetNPC = this;
             idleState.SetNPC = this;
 
-            currentState = roamState;
+            m_currentState = roamState;
         }
 
         private void Update()
         {
-            currentState = currentState.DoState(this);
-            currentStateName = "" + currentState;
+            m_currentState = m_currentState.DoState(this);
         }
 
         public override void Kill(BulletType type, IProjectileInterface projectile)
@@ -79,13 +76,13 @@ namespace Asteroids
 
         public void OnSpawned(IMemoryPool pool)
         {
-            _pool = pool;
-            _startTime = Time.realtimeSinceStartup;
+            m_pool = pool;
+            m_startTime = Time.realtimeSinceStartup;
         }
 
         public void OnDespawned()
         {
-            _pool = null;
+            m_pool = null;
         }
 
         public override void SpawnExplosion()
@@ -95,7 +92,7 @@ namespace Asteroids
 
         private void UpdateScore()
         {
-            _scoreHandler.UpdateScore(score);
+            m_scoreHandler.UpdateScore(m_score);
         }
 
         public float Scale

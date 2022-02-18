@@ -1,34 +1,31 @@
 using UnityEngine;
 using Zenject;
-using System.Collections;
-using System.Collections.Generic;
-
 using UnityEngine.UI;
 
 namespace Asteroids
 {
     public sealed class ScoreText : MonoBehaviour
     {
-        Text scoreText;
-        IScoreHandler scoreHandlerInterface;
+        private Text m_scoreText;
+        private IScoreHandler m_scoreHandleInterface;
 
         [Inject]
         public void Construct(IScoreHandler scoreHadler)
         {
-            this.scoreHandlerInterface = scoreHadler;
+            this.m_scoreHandleInterface = scoreHadler;
         }
 
-        void Start()
+        private void Start()
         {
-            scoreText = GetComponent<Text>();
-            scoreHandlerInterface.UpdateScoreAction += UpdateScore;
-            scoreText.text = "SCORE:0";
+            m_scoreText = GetComponent<Text>();
+            m_scoreHandleInterface.UpdateScoreAction += UpdateScore;
+            m_scoreText.text = "SCORE:0";
         }
 
-        void UpdateScore()
+        private void UpdateScore()
         {
-            var score = scoreHandlerInterface.GetScore;
-            scoreText.text = "SCORE:" + score;
+            var score = m_scoreHandleInterface.GetScore;
+            m_scoreText.text = "SCORE:" + score;
         }
     }
 }

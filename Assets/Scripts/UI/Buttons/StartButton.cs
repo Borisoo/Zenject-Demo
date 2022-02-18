@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -8,13 +7,13 @@ namespace Asteroids
 {
     public class StartButton : MonoBehaviour
     {
-        private Button startButton;
-        [Inject]private  IGameController gameController;
+        private Button m_startButton;
+        [Inject]private IGameController m_gameController;
 
         void Start()
         {
-            startButton = GetComponent<Button>();
-            startButton.onClick.AddListener(()=> gameController.StartGame());
+            m_startButton = GetComponent<Button>();
+            m_startButton.onClick.AddListener(()=> m_gameController.StartGame());
         }
     }
 }

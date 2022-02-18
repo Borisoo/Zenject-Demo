@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using System;
@@ -9,46 +7,42 @@ namespace Asteroids
 {
     public sealed class Asteroid : SpaceObjectBehaviour<BulletType, IProjectileInterface>, IPoolable<IMemoryPool>
     {
-        private LevelHelper _level;
-        [Inject] private AsteroidSpawnerSettings _settings;
-        private float _startTime;
-        private int numberOfFragments;
-        private int score;
-        private Vector3 scale;
-        private AsteroidType asteroidType;
-        private IMemoryPool _pool;
+        private LevelHelper m_levelHelper;
+        [Inject] private AsteroidSpawnerSettings m_asteroidSpanwerSettings;
+        private float m_startTime;
+        private int m_numberOfFragments;
+        private int m_score;
+        private Vector3 m_scale;
+        private AsteroidType m_asteroidType;
+        private IMemoryPool m_pool;
+        private AsteroidType m_fragmentType;
+        private ISpawnerInterface<AsteroidType> m_spawnerInterface;
+        private IScoreHandler m_scoreHandler;
+        private Rigidbody m_rigidBody;
 
-
-        private AsteroidType fragmentType;
-        private ISpawnerInterface<AsteroidType> _spawnerInterface;
-        private IScoreHandler _scoreHandler;
-        private Vector3 screenCenter;
-        private Rigidbody _rigidBody;
-
-
-        public int Score { set => score = value; }
-        public Vector3 Scale { set => scale = value; }
-        public int NumberOfFragments { set => numberOfFragments = value; }
-        public AsteroidType FragmentType { set => fragmentType = value; }
-        public AsteroidType AsteroidType { set => asteroidType = value; }
-
+        public int Score { set => m_score = value; }
+        public int NumberOfFragments { set => m_numberOfFragments = value; }
+        public AsteroidType FragmentType { set => m_fragmentType = value; }
+        public AsteroidType AsteroidType { set => m_asteroidType = value; }
+        public override Vector3 Position
+        {
+            get => transform.position;
+            set => transform.position = value;
+        }
 
         [Inject]
         public void Construct(LevelHelper levelHelper, ISpawnerInterface<AsteroidType> spawner, IScoreHandler scoreHandler)
         {
-            _level = levelHelper;
-            _spawnerInterface = spawner;
-            _scoreHandler = scoreHandler;
+            m_levelHelper = levelHelper;
+            m_spawnerInterface = spawner;
+            m_scoreHandler = scoreHandler;
         }
-
-        public override Vector3 Position { get => transform.position; set => transform.position = value; }
-
 
         private void Start()
         {
-            _rigidBody = GetComponent<Rigidbody>();
+            m_rigidBody = GetComponent<Rigidbody>();
             Vector3 dir = Vector3.zero - transform.position;
-            _rigidBody.AddForce(GetRandomDirection() * 100f);
+            m_rigidBody.AddForce(GetRandomDirection() * 100f);
         }
 
         private Vector3 GetRandomDirection()
@@ -59,16 +53,14 @@ namespace Asteroids
 
         private void Update()
         {
-            if (Time.realtimeSinceStartup - _startTime > _settings.lifeTime)
+            if (Time.realtimeSinceStartup - m_startTime > m_asteroidSpanwerSettings.lifeTime)
             {
-                _pool.Despawn(this);
+                m_pool.Despawn(this);
             }
 
             Position = transform.position;
             CheckForTeleport();
         }
-
-        public class Factory : PlaceholderFactory<Asteroid> { }
 
         public override void Kill(BulletType type, IProjectileInterface projectile)
         {
@@ -84,7 +76,7 @@ namespace Asteroids
 
         private void UpdateScore()
         {
-            _scoreHandler.UpdateScore(score);
+            m_scoreHandler.UpdateScore(m_score);
         }
 
         private void BreakIntoFragments()
@@ -95,48 +87,48 @@ namespace Asteroids
                 return;
             }
 
-            for (int i = 0; i < numberOfFragments; i++)
+            for (int i = 0; i < m_numberOfFragments; i++)
             {
-                _spawnerInterface.SpawnAtPosition(fragmentType, this.transform.position);
+                m_spawnerInterface.SpawnAtPosition(m_fragmentType, this.transform.position);
             }
         }
 
         private bool CanBreak()
         {
-            if (asteroidType == AsteroidType.smallAsteroid || fragmentType == AsteroidType.none
-            || asteroidType == AsteroidType.mediumAsteroid) { return false; }
+            if (m_asteroidType == AsteroidType.smallAsteroid || m_fragmentType == AsteroidType.none
+            || m_asteroidType == AsteroidType.mediumAsteroid) { return false; }
 
             return true;
         }
 
         public void OnSpawned(IMemoryPool pool)
         {
-            _pool = pool;
-            _startTime = Time.realtimeSinceStartup;
+            m_pool = pool;
+            m_startTime = Time.realtimeSinceStartup;
         }
 
         public void OnDespawned()
         {
-            _pool = null;
+            m_pool = null;
         }
 
         private void CheckForTeleport()
         {
-            if (Position.x > _level.Right + ScaleFactor && IsMovingInDirection(Vector3.right))
+            if (Position.x > m_levelHelper.Right + ScaleFactor && IsMovingInDirection(Vector3.right))
             {
-                transform.SetX(_level.Left - ScaleFactor);
+                transform.SetX(m_levelHelper.Left - ScaleFactor);
             }
-            else if (Position.x < _level.Left - ScaleFactor && IsMovingInDirection(-Vector3.right))
+            else if (Position.x < m_levelHelper.Left - ScaleFactor && IsMovingInDirection(-Vector3.right))
             {
-                transform.SetX(_level.Right + ScaleFactor);
+                transform.SetX(m_levelHelper.Right + ScaleFactor);
             }
-            else if (Position.y < _level.Bottom - ScaleFactor && IsMovingInDirection(-Vector3.up))
+            else if (Position.y < m_levelHelper.Bottom - ScaleFactor && IsMovingInDirection(-Vector3.up))
             {
-                transform.SetY(_level.Top + ScaleFactor);
+                transform.SetY(m_levelHelper.Top + ScaleFactor);
             }
-            else if (Position.y > _level.Top + ScaleFactor && IsMovingInDirection(Vector3.up))
+            else if (Position.y > m_levelHelper.Top + ScaleFactor && IsMovingInDirection(Vector3.up))
             {
-                transform.SetY(_level.Bottom - ScaleFactor);
+                transform.SetY(m_levelHelper.Bottom - ScaleFactor);
             }
 
             transform.RotateAround(transform.position, Vector3.up, 30 * Time.deltaTime);
@@ -144,7 +136,7 @@ namespace Asteroids
 
         internal bool IsMovingInDirection(Vector3 dir)
         {
-            return Vector3.Dot(dir, _rigidBody.velocity) > 0;
+            return Vector3.Dot(dir, m_rigidBody.velocity) > 0;
         }
 
         public float ScaleFactor
@@ -158,8 +150,10 @@ namespace Asteroids
             set
             {
                 transform.localScale = new Vector3(value, value, value);
-                _rigidBody.mass = value;
+                m_rigidBody.mass = value;
             }
         }
+
+        public class Factory : PlaceholderFactory<Asteroid> { }
     }
 }

@@ -6,9 +6,3 @@ public enum AsteroidType
     LargeAsteroid,
 
 }
-
-public enum UFOType
-{
-    smallUFO,
-    largeUFO,
-}

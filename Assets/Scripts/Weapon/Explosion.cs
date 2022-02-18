@@ -1,23 +1,20 @@
 using UnityEngine;
 using Zenject;
-using System;
-
 
 namespace Asteroids
 {
     public class Explosion : MonoBehaviour, IPoolable<IMemoryPool>
     {
-        [SerializeField] private float _lifeTime;
-        [SerializeField] private ParticleSystem _particleSystem;
-
-        private float _startTime;
-        private IMemoryPool _pool;
+        [SerializeField] private float m_lifeTime;
+        [SerializeField] private ParticleSystem m_particleSystem;
+        private float m_startTime;
+        private IMemoryPool m_pool;
 
         public void Update()
         {
-            if (Time.realtimeSinceStartup - _startTime > _lifeTime)
+            if (Time.realtimeSinceStartup - m_startTime > m_lifeTime)
             {
-                _pool.Despawn(this);
+                m_pool.Despawn(this);
             }
         }
 
@@ -25,11 +22,11 @@ namespace Asteroids
 
         public void OnSpawned(IMemoryPool pool)
         {
-            _particleSystem.Clear();
-            _particleSystem.Play();
+            m_particleSystem.Clear();
+            m_particleSystem.Play();
 
-            _startTime = Time.realtimeSinceStartup;
-            _pool = pool;
+            m_startTime = Time.realtimeSinceStartup;
+            m_pool = pool;
         }
 
         public class Factory : PlaceholderFactory<Explosion>

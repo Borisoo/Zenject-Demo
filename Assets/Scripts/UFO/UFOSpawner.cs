@@ -1,35 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
-using System;
 using ModestTree;
 
 namespace Asteroids
 {
     public sealed class UFOSpawner : ITickable, ISpawnerInterface<UFOType>
     {
-        private UFO.Factory _UFOFactory;
-        private LevelHelper _level;
-        private IUFOFactoryInterface<UFOType, UFOData> UFODataFactory;
-        private float _timer;
+        private UFO.Factory m_ufoFactory;
+        private LevelHelper m_level;
+        private IUFOFactoryInterface<UFOType, UFOData> m_ufoDataFactory;
+        private float m_timer;
 
         [Inject]
         private UFOSpawnerSettings _settings;
-
-        bool canSpawn;
-
+        private bool m_canSpawn;
 
         [Inject]
         public void Construct(UFO.Factory ufoFactory, LevelHelper level, IUFOFactoryInterface<UFOType, UFOData> ufoDataFactoryInterface)
         {
-            _UFOFactory = ufoFactory;
-            _level = level;
-            UFODataFactory = ufoDataFactoryInterface;
+            m_ufoFactory = ufoFactory;
+            m_level = level;
+            m_ufoDataFactory = ufoDataFactoryInterface;
         }
         public void Start()
         {
-            canSpawn = true;
+            m_canSpawn = true;
         }
 
         public void Tick()
@@ -39,29 +34,29 @@ namespace Asteroids
 
         private void SpawnUFOAtInterval()
         {
-            if (!canSpawn) { return; }
+            if (!m_canSpawn) { return; }
 
-            _timer += Time.deltaTime;
-            if (_timer > _settings.spawnDelay)
+            m_timer += Time.deltaTime;
+            if (m_timer > _settings.spawnDelay)
             {
-                _timer = 0;
+                m_timer = 0;
                 SpawnUFO();
             }
         }
 
         private void SpawnUFO()
         {
-            UFO ufo = _UFOFactory.Create();
+            UFO ufo = m_ufoFactory.Create();
 
             var ufoType = RandomEnum<UFOType>.Get();
-            var score = UFODataFactory.GetScore(ufoType);
-            var ufoData = UFODataFactory.GetData(ufoType);
+            var score = m_ufoDataFactory.GetScore(ufoType);
+            var ufoData = m_ufoDataFactory.GetData(ufoType);
 
             ufo.Score = score;
             ufo.transform.position = GetRandomStartPosition(ufo.Scale);
         }
 
-        Vector3 GetRandomStartPosition(float scale)
+        private Vector3 GetRandomStartPosition(float scale)
         {
             var area = RandomEnum<AreaType>.Get();
             var rand = UnityEngine.Random.Range(0.0f, 1.0f);
@@ -70,19 +65,19 @@ namespace Asteroids
             {
                 case AreaType.top:
                     {
-                        return new Vector3(_level.Left + rand * _level.Width, _level.Top + scale, 0);
+                        return new Vector3(m_level.Left + rand * m_level.Width, m_level.Top + scale, 0);
                     }
                 case AreaType.bottom:
                     {
-                        return new Vector3(_level.Left + rand * _level.Width, _level.Bottom - scale, 0);
+                        return new Vector3(m_level.Left + rand * m_level.Width, m_level.Bottom - scale, 0);
                     }
                 case AreaType.right:
                     {
-                        return new Vector3(_level.Right + scale, _level.Bottom + rand * _level.Height, 0);
+                        return new Vector3(m_level.Right + scale, m_level.Bottom + rand * m_level.Height, 0);
                     }
                 case AreaType.left:
                     {
-                        return new Vector3(_level.Left - scale, _level.Bottom + rand * _level.Height, 0);
+                        return new Vector3(m_level.Left - scale, m_level.Bottom + rand * m_level.Height, 0);
                     }
             }
 
@@ -96,7 +91,7 @@ namespace Asteroids
 
         public void Stop()
         {
-            canSpawn = false;
+            m_canSpawn = false;
         }
     }
 }

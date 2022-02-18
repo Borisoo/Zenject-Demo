@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 
 namespace Asteroids
@@ -10,23 +8,23 @@ namespace Asteroids
         [SerializeField] private ProjectileData m_projectileData;
         [SerializeField] private Transform m_nozzle;
 
-        private IInputInterface _InputInterface;
-        private Asteroids.Bullet.Factory _bulletFactory;
-        private float _speed;
-        private float _timer;
-        private float _fireRate;
+        private IInputInterface m_InputInterface;
+        private Asteroids.Bullet.Factory m_bulletFactory;
+        private float m_speed;
+        private float m_timer;
+        private float m_fireRate;
 
         public IInputInterface InputDependency
         {
-            get => _InputInterface;
-            set => _InputInterface = value;
+            get => m_InputInterface;
+            set => m_InputInterface = value;
         }
 
         [Inject]
         public void Setup(IInputInterface InputInterface, Bullet.Factory bulletFactory)
         {
-            _InputInterface = InputInterface;
-            _bulletFactory = bulletFactory;
+            m_InputInterface = InputInterface;
+            m_bulletFactory = bulletFactory;
         }
 
         private void Start()
@@ -36,13 +34,13 @@ namespace Asteroids
 
         private void Initialize()
         {
-            _speed = m_projectileData.speed;
-            _fireRate = m_projectileData.fireRate;
+            m_speed = m_projectileData.speed;
+            m_fireRate = m_projectileData.fireRate;
         }
 
         private void Update()
         {
-            if (_InputInterface.Fire)
+            if (m_InputInterface.Fire)
             {
                 Shoot();
             }
@@ -50,24 +48,24 @@ namespace Asteroids
 
         private void Shoot()
         {
-            _timer += Time.deltaTime;
-            if (_timer > _fireRate)
+            m_timer += Time.deltaTime;
+            if (m_timer > m_fireRate)
             {
-                _timer = 0;
+                m_timer = 0;
                 SpawnBullet();
             }
         }
 
         private void SpawnBullet()
         {
-            Bullet projectile = _bulletFactory.Create(BulletType.FromPlayer);
+            Bullet projectile = m_bulletFactory.Create(BulletType.FromPlayer);
 
             if (projectile != null)
             {
                 projectile.transform.position = m_nozzle.position;
                 projectile.transform.rotation = m_nozzle.rotation;
                 projectile.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                projectile.GetComponent<Rigidbody>().velocity = _speed * Time.deltaTime * m_nozzle.up;
+                projectile.GetComponent<Rigidbody>().velocity = m_speed * Time.deltaTime * m_nozzle.up;
             }
         }
     }

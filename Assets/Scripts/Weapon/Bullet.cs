@@ -1,52 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
 using ModestTree;
-using System;
 
 namespace Asteroids
 {
     public sealed class Bullet : MonoBehaviour, IPoolable<BulletType, IMemoryPool>, IProjectileInterface
     {
-        private float _startTime;
-        private IMemoryPool _pool;
-        private BulletType _type;
+        private float m_startTime;
+        private IMemoryPool m_pool;
+        private BulletType m_bulletType;
 
         [SerializeField] private Material _playerMaterial = null;
         [SerializeField] private Material _enemyMaterial = null;
 
         [Inject]
-        private BulletSettings _settings;
-        private MeshRenderer _renderer;
+        private BulletSettings m_bulletSettings;
+        private MeshRenderer m_renderer;
 
-        public BulletType Type { get { return _type; } }
-
+        public BulletType Type
+        {
+            get { return m_bulletType; }
+        }
 
         private void Update()
         {
-            if (Time.realtimeSinceStartup - _startTime > _settings.LifeTime)
+            if (Time.realtimeSinceStartup - m_startTime > m_bulletSettings.LifeTime)
             {
-                _pool.Despawn(this);
+                m_pool.Despawn(this);
             }
         }
 
         public void OnSpawned(BulletType type, IMemoryPool pool)
         {
-            _pool = pool;
-            _type = type;
-
-            _renderer = GetComponent<MeshRenderer>();
-
-            _renderer.material = type == BulletType.FromEnemy ? _enemyMaterial : _playerMaterial;
-            _startTime = Time.realtimeSinceStartup;
+            m_pool = pool;
+            m_bulletType = type;
+            m_renderer = GetComponent<MeshRenderer>();
+            m_renderer.material = type == BulletType.FromEnemy ? _enemyMaterial : _playerMaterial;
+            m_startTime = Time.realtimeSinceStartup;
         }
 
         private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.TryGetComponent(out SpaceObjectBehaviour<BulletType, IProjectileInterface> ship))
             {
-                ship.Kill(_type, this);
+                ship.Kill(m_bulletType, this);
             }
         }
 
@@ -57,13 +54,13 @@ namespace Asteroids
 
         public void OnDespawned()
         {
-            _pool = null;
+            m_pool = null;
         }
 
         private void OnDisable()
         {
-            if (_pool != null)
-                _pool.Despawn(this);
+            if (m_pool != null)
+                m_pool.Despawn(this);
         }
 
         public class Factory : PlaceholderFactory<BulletType, Bullet> { }

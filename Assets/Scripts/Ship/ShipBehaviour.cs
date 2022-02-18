@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -7,24 +5,24 @@ namespace Asteroids
 {
     public sealed class ShipBehaviour : SpaceObjectBehaviour<BulletType, IProjectileInterface>, IShipInterface
     {
-        private IInputInterface _inputInterface;
-        private IGameController _gameController;
-        private bool isDead;
+        private IInputInterface m_inputInterface;
+        private IGameController m_gameController;
+        private bool m_isDead;
 
         [Inject]
         public void Setup(IInputInterface inputInterface, IGameController gameController)
         {
-            _inputInterface = inputInterface;
-            _gameController = gameController;
+            m_inputInterface = inputInterface;
+            m_gameController = gameController;
         }
 
         public GameObject TargetObject { get => this.gameObject; }
         public Vector3 ShipPosition { get => this.transform.position; }
         public override Vector3 Position { get => this.transform.position; }
-        public bool IsDead => isDead;
+        public bool IsDead => m_isDead;
 
 
-        void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter(Collider other)
         {
             if (other.gameObject.CompareTag(Tags.Obstacle))
             {
@@ -44,8 +42,8 @@ namespace Asteroids
         public void InvokeDeath()
         {
             SpawnExplosion();
-            _gameController.EndGame();
-            isDead = true;
+            m_gameController.EndGame();
+            m_isDead = true;
             gameObject.SetActive(false);
         }
 

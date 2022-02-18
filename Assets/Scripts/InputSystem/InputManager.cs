@@ -1,38 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using Zenject;
 
 namespace Asteroids
 {
     public class InputManager : IInputInterface
     {
-        private float _horizontal;
-        private float _vertical;
-        private bool _Fire;
-        private UnityAction _FireAction;
-
+        private float m_horizontal;
+        private float m_vertical;
+        private bool m_fire;
+        private UnityAction m_FireAction;
         public float Horizontal { get => GetTurnAxis(); }
-
         public float Vertical { get => GetForwardThrust(); }
-
         public bool Fire { get => IsShooting(); }
 
         public UnityAction FireAction
         {
-            get => _FireAction;
-            set => _FireAction = value;
+            get => m_FireAction;
+            set => m_FireAction = value;
         }
 
         private float GetForwardThrust()
         {
-            return _vertical = Input.GetAxis("Vertical");
+            return m_vertical = Input.GetAxis("Vertical");
         }
 
         public float GetTurnAxis()
         {
-            return _horizontal = Input.GetAxis("Horizontal");
+            return m_horizontal = Input.GetAxis("Horizontal");
         }
 
         public bool IsShooting()

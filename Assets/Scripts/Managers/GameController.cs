@@ -7,27 +7,27 @@ namespace Asteroids
 {
     public class GameController : IGameController
     {
-        [Inject] private ISpawnerInterface<AsteroidType> asteroidSpawner;
-        [Inject] private ISpawnerInterface<UFOType> ufoSpawner;
-        [Inject] private IUIManagerInterface UIController;
+        [Inject] private ISpawnerInterface<AsteroidType> m_asteroidSpawner;
+        [Inject] private ISpawnerInterface<UFOType> m_ufoSpawner;
+        [Inject] private IUIManagerInterface m_UIController;
 
-        private bool isGameOver;
+        private bool m_isGameOver;
+        public bool IsGameOver { get => m_isGameOver; }
 
         public void StartGame()
         {
-            asteroidSpawner.Start();
-            ufoSpawner.Start();
-            UIController.ShowGameScreen();
+            m_asteroidSpawner.Start();
+            m_ufoSpawner.Start();
+            m_UIController.ShowGameScreen();
         }
 
         public void EndGame()
         {
-            asteroidSpawner.Stop();
-            ufoSpawner.Stop();
-            UIController.ShowEndScreen();
+            m_asteroidSpawner.Stop();
+            m_ufoSpawner.Stop();
+            m_UIController.ShowEndScreen();
         }
 
-        public bool IsGameOver { get => isGameOver; }
         public void Reload()
         {
             SceneManager.LoadScene(0);
